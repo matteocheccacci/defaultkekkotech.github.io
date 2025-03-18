@@ -1,3 +1,4 @@
+<!DOCYTPE PHP>
 <?php
 define("TITLE","Home Page");
 include('layouts/header.php');
