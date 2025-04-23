@@ -52,6 +52,12 @@
       text-decoration: underline;
     }
   </style>
+  <script>
+    // Se l'utente accede da mobile, rimane qui; altrimenti reindirizza alla desktop
+    if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = "https://kekkotech.com/";
+    }
+  </script>
   <!-- Shared content definitions -->
   <script src="/js/content.js"></script>
 </head>
@@ -63,17 +69,17 @@
       <a href="#" data-section="contact">Contact</a>
       <a href="https://kekkotech.com/" target="_blank">Versione desktop</a>
     </div>
-    <div class="content" id="content">
-      {{ siteContent.home }}
-    </div>
+    <div class="content" id="content"></div>
   </div>
   <script>
-    // siteContent is defined in /js/content.js and includes keys: home, about, downloads, contact
+    // Inizializza contenuto
+    document.getElementById('content').innerHTML = siteContent.home.replace(/\n/g, '<br>');
+
     document.querySelectorAll('.menu a[data-section]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         const sec = link.getAttribute('data-section');
-        document.getElementById('content').innerHTML = siteContent[sec];
+        document.getElementById('content').innerHTML = siteContent[sec].replace(/\n/g, '<br>');
       });
     });
   </script>
