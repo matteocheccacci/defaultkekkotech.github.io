@@ -2,12 +2,12 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>404 - Pagina non trovata | Kekkotech</title>
   <style>
     body {
       margin: 0;
-      padding: 20px;
+      padding: 10px;
       background-color: #000;
       color: #0f0;
       font-family: Consolas, monospace;
@@ -16,10 +16,12 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      box-sizing: border-box;
     }
 
     .terminal {
-      max-width: 600px;
+      width: 100%;
+      max-width: 500px;
       border: 1px solid #0f0;
       padding: 20px;
       box-shadow: 0 0 10px #0f0;
@@ -27,10 +29,10 @@
     }
 
     .sad-face {
-      font-size: 48px;
-      line-height: 1;
+      font-size: 36px;
+      line-height: 1.2;
       margin: 20px 0;
-      white-space: pre;
+      white-space: pre-wrap;
     }
 
     .btn {
@@ -43,6 +45,7 @@
       border-radius: 4px;
       text-decoration: none;
       font-family: Consolas, monospace;
+      font-size: 16px;
     }
 
     .btn:hover {
@@ -50,7 +53,6 @@
     }
   </style>
   <script>
-    // Se l'utente clicca il bottone, torna alla home e chiude la scheda
     function goHome() {
       window.location.href = '/';
     }
