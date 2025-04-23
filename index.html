@@ -103,6 +103,7 @@
     function showSection(section) {
       if (sections[section]) {
         sections[section].forEach(line => printOutput(line));
+        printOutput("\n(Digita 'home' per tornare alla schermata iniziale)");
       } else {
         printOutput("Comando non riconosciuto. Digita 'help' per una lista di comandi.");
       }
