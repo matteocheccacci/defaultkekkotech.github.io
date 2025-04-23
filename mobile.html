@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Home Mobile | Kekkotech</title>
   <style>
+    /* Lo stesso stile di prima */
     body {
       margin: 0;
       padding: 10px;
@@ -71,14 +72,22 @@
     <div class="content" id="content"></div>
   </div>
   <script>
-    // Inizializza contenuto
+    // Inizializza il contenuto iniziale
     document.getElementById('content').innerHTML = siteContent.homemobile.replace(/\n/g, '<br>');
 
+    // Funzione per caricare il contenuto delle sezioni
     document.querySelectorAll('.menu a[data-section]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         const sec = link.getAttribute('data-section');
-        document.getElementById('content').innerHTML = siteContent[sec].replace(/\n/g, '<br>');
+        const sectionContent = siteContent[sec];
+        
+        // Verifica se il contenuto esiste per la sezione e caricalo
+        if (sectionContent) {
+          document.getElementById('content').innerHTML = sectionContent.replace(/\n/g, '<br>');
+        } else {
+          document.getElementById('content').innerHTML = `Sezione ${sec} non trovata.`;
+        }
       });
     });
   </script>
