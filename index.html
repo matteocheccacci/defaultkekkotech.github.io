@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminal Style Website</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #000;
+      color: #0f0;
+      font-family: Consolas, monospace;
+      font-size: 16px;
+    }
+
+    .terminal {
+      max-width: 800px;
+      margin: auto;
+      border: 1px solid #0f0;
+      padding: 20px;
+      box-shadow: 0 0 10px #0f0;
+    }
+
+    .prompt {
+      color: #0f0;
+    }
+
+    .input-line::before {
+      content: "$ ";
+      color: #0f0;
+    }
+
+    a {
+      color: #0ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="input-line">Benvenuto nel mio sito in stile terminale!</div>
+    <div class="input-line">Mi chiamo Matteo Checcacci.</div>
+    <div class="input-line">Sono uno studente di ingegneria informatica appassionato di astronomia, fisica e informatica.</div>
+    <div class="input-line">Digita <a href="#">help</a> per vedere i comandi disponibili.</div>
+    <br />
+    <div class="input-line">help</div>
+    <div class="input-line">[about] [projects] [contact]</div>
+    <br />
+    <div class="input-line">about</div>
+    <div class="input-line">Questo sito è stato progettato per sembrare un terminale.</div>
+    <div class="input-line">Lo stile minimale riflette la mia passione per la programmazione.</div>
+    <br />
+    <div class="input-line">projects</div>
+    <div class="input-line">- <a href="#">Progetto 1</a></div>
+    <div class="input-line">- <a href="#">Progetto 2</a></div>
+    <br />
+    <div class="input-line">contact</div>
+    <div class="input-line">Email: <a href="mailto:matteo@example.com">matteo@example.com</a></div>
+    <div class="input-line">GitHub: <a href="https://github.com/tuoaccount" target="_blank">github.com/tuoaccount</a></div>
+  </div>
+</body>
+</html>
