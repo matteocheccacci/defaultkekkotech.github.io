@@ -1,8 +1,154 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html lang="it">
 <head>
-  <title>Kekkotech | 404</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 - Pagina non trovata | Kekkotech</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #000;
+      color: #0f0;
+      font-family: Consolas, monospace;
+      font-size: 16px;
+    }
+
+    .terminal {
+      max-width: 800px;
+      margin: auto;
+      border: 1px solid #0f0;
+      padding: 20px;
+      box-shadow: 0 0 10px #0f0;
+    }
+
+    .input-line::before {
+      content: "$ ";
+      color: #0f0;
+    }
+
+    .typed {
+      white-space: pre;
+      overflow: hidden;
+      border-right: .15em solid #0f0;
+      animation: blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #0f0; }
+    }
+  </style>
 </head>
 <body>
-  <h1>404</h1>
-  <h2>Non siamo riusciti a trovare la pagina che stai cercando.</h2>
+  <div class="terminal" id="terminal"></div>
+
+  <script>
+    const sections = {
+      help: [
+        "Comandi disponibili: help, about, contact, home"
+      ],
+      about: [
+        "Siamo spiacenti, la pagina che stai cercando non esiste.",
+        "Digita 'home' per tornare alla pagina principale."
+      ],
+      contact: [
+        "Email: <a href='mailto:matteo@example.com'>matteo@example.com</a>",
+        "Instagram: <a href='https://instagram.com/matteo.checcacci' target='_blank'>instagram.com/matteo.checcacci</a>"
+      ],
+      error: [
+        "404 - Pagina non trovata.",
+        ":(",
+        "La pagina che stai cercando non esiste o è stata spostata."
+      ]
+    };
+
+    const homeLines = [
+      "Benvenuto su kekkotech.com!",
+      "Il mio nome è Matteo.",
+      "Sono uno studente di ingegneria informatica presso il Politecnico di Milano.",
+      "Digita help per vedere i comandi disponibili.",
+      ""
+    ];
+
+    const terminal = document.getElementById("terminal");
+
+    function clearTerminal() {
+      terminal.innerHTML = "";
+    }
+
+    function printLine(text, typed = false) {
+      const line = document.createElement("div");
+      line.classList.add("input-line");
+      line.innerHTML = typed ? "$ <span class='typed'>" + text + "</span>" : "$ " + text;
+      terminal.appendChild(line);
+    }
+
+    function printOutput(text) {
+      const line = document.createElement("div");
+      line.classList.add("input-line");
+      line.innerHTML = text;
+      terminal.appendChild(line);
+    }
+
+    function showSection(section) {
+      if (sections[section]) {
+        sections[section].forEach(line => printOutput(line));
+        printOutput("\n(Digita 'home' per tornare alla schermata iniziale)");
+      } else {
+        printOutput("Comando non riconosciuto. Digita 'help' per una lista di comandi.");
+      }
+    }
+
+    function promptInput() {
+      const inputLine = document.createElement("div");
+      inputLine.classList.add("input-line");
+
+      const span = document.createElement("span");
+      span.textContent = "$ ";
+
+      const input = document.createElement("input");
+      input.style.background = "black";
+      input.style.color = "#0f0";
+      input.style.border = "none";
+      input.style.outline = "none";
+      input.style.font = "inherit";
+      input.autofocus = true;
+
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          const command = input.value.trim().toLowerCase();
+          input.disabled = true;
+          input.style.color = "#555";
+          handleCommand(command);
+        }
+      });
+
+      inputLine.appendChild(span);
+      inputLine.appendChild(input);
+      terminal.appendChild(inputLine);
+      input.focus();
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function handleCommand(cmd) {
+      if (cmd === "home") {
+        clearTerminal();
+        boot();
+        return;
+      }
+      printLine(cmd);
+      showSection(cmd);
+      promptInput();
+    }
+
+    function boot() {
+      printLine("404 - Pagina non trovata");
+      sections.error.forEach(line => printOutput(line));
+      promptInput();
+    }
+
+    boot();
+  </script>
 </body>
+</html>
