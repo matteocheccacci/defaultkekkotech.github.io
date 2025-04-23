@@ -24,12 +24,6 @@
       content: "$ ";
       color: #0f0;
     }
-    a {
-      color: #0ff;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    a:hover { text-decoration: underline; }
     .typed {
       white-space: pre;
       overflow: hidden;
@@ -40,9 +34,15 @@
       from, to { border-color: transparent }
       50% { border-color: #0f0; }
     }
+    a {
+      color: #0ff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    a:hover { text-decoration: underline; }
   </style>
   <script>
-    // Reindirizzamento a mobile
+    // Redirect mobile
     if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/mobile";
     }
@@ -53,25 +53,49 @@
   <div class="terminal" id="terminal"></div>
   <script>
     const terminal = document.getElementById('terminal');
+    // Helper to append line
+    function appendLine(text, isTyped) {
+      const line = document.createElement('div');
+      line.classList.add('input-line');
+      if (isTyped) {
+        line.classList.add('typed');
+        line.textContent = '';
+      } else {
+        line.textContent = `$ ${text}`;
+      }
+      terminal.appendChild(line);
+      return line;
+    }
+    
+    // Typewriter effect for an array of lines
+    function typeLines(lines, onComplete) {
+      let i = 0;
+      function nextLine() {
+        if (i < lines.length) {
+          const lineEl = appendLine(lines[i], true);
+          let j = 0;
+          function typeChar() {
+            if (j < lines[i].length) {
+              lineEl.textContent += lines[i].charAt(j);
+              j++;
+              setTimeout(typeChar, 30);
+            } else {
+              lineEl.classList.remove('typed');
+              appendLine('');
+              i++;
+              setTimeout(nextLine, 300);
+            }
+          }
+          typeChar();
+        } else {
+          onComplete && onComplete();
+        }
+      }
+      nextLine();
+    }
 
-    function clearTerminal() {
-      terminal.innerHTML = '';
-    }
-    function printLine(text) {
-      const line = document.createElement('div');
-      line.classList.add('input-line');
-      line.textContent = `$ ${text}`;
-      terminal.appendChild(line);
-    }
-    function printOutput(html) {
-      const line = document.createElement('div');
-      line.classList.add('input-line');
-      line.innerHTML = html;
-      terminal.appendChild(line);
-    }
     function promptInput() {
-      const inputLine = document.createElement('div');
-      inputLine.classList.add('input-line');
+      const inputLine = appendLine('', false);
       const span = document.createElement('span'); span.textContent = '$ ';
       const input = document.createElement('input');
       Object.assign(input.style, { background: 'black', color: '#0f0', border: 'none', outline: 'none', font: 'inherit' });
@@ -84,30 +108,45 @@
           handleCommand(cmd);
         }
       });
+      // Clear placeholder text
+      inputLine.textContent = '';
       inputLine.append(span, input);
-      terminal.appendChild(inputLine);
       input.focus();
       terminal.scrollTop = terminal.scrollHeight;
     }
-    function showContent(key) {
-      if (siteContent[key]) {
-        siteContent[key].split('\n').forEach(line => printOutput(line));
-        printOutput('<br>(Digita \'home\' per tornare all\'inizio)');
-      } else {
-        printOutput("Comando non riconosciuto. Digita 'help' per una lista di comandi.");
-      }
-    }
+
     function handleCommand(cmd) {
-      if (cmd === 'home') { clearTerminal(); boot(); return; }
-      printLine(cmd);
+      if (cmd === 'home') {
+        terminal.innerHTML = '';
+        boot();
+        return;
+      }
+      appendLine(cmd, false);
       showContent(cmd);
       promptInput();
     }
-    function boot() {
-      // Stampa home testuale
-      siteContent.home.split('\n').forEach(line => printLine(line));
-      promptInput();
+
+    function showContent(key) {
+      const data = siteContent[key] || `Comando non riconosciuto. Digita 'help' per lista.`;
+      data.split('\n').forEach(line => {
+        const out = document.createElement('div');
+        out.classList.add('input-line');
+        out.innerHTML = line;
+        terminal.appendChild(out);
+      });
+      if (['help','about','downloads','contact'].includes(key)) {
+        const info = document.createElement('div');
+        info.classList.add('input-line');
+        info.innerHTML = "<br>(Digita 'home' per tornare all'inizio)";
+        terminal.appendChild(info);
+      }
     }
+
+    function boot() {
+      const lines = siteContent.home.split('\n');
+      typeLines(lines, promptInput);
+    }
+
     boot();
   </script>
 </body>
