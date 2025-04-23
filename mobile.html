@@ -67,13 +67,12 @@
       <a href="#" data-section="about">About</a>
       <a href="#" data-section="downloads">Downloads</a>
       <a href="#" data-section="contact">Contact</a>
-      <a href="https://kekkotech.com/" target="_blank">Versione desktop</a>
     </div>
     <div class="content" id="content"></div>
   </div>
   <script>
     // Inizializza contenuto
-    document.getElementById('content').innerHTML = siteContent.home.replace(/\n/g, '<br>');
+    document.getElementById('content').innerHTML = siteContent.homemobile.replace(/\n/g, '<br>');
 
     document.querySelectorAll('.menu a[data-section]').forEach(link => {
       link.addEventListener('click', e => {
