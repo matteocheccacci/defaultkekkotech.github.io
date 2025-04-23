@@ -52,6 +52,8 @@
       text-decoration: underline;
     }
   </style>
+  <!-- Shared content definitions -->
+  <script src="/js/content.js"></script>
 </head>
 <body>
   <div class="terminal">
@@ -59,24 +61,19 @@
       <a href="#" data-section="about">About</a>
       <a href="#" data-section="downloads">Downloads</a>
       <a href="#" data-section="contact">Contact</a>
+      <a href="https://kekkotech.com/" target="_blank">Versione desktop</a>
     </div>
     <div class="content" id="content">
-      Benvenuto su kekkotech.com/mobile!
-      Tocca un comando per esplorare.
+      {{ siteContent.home }}
     </div>
   </div>
   <script>
-    const sections = {
-      about: `Questo sito è progettato per sembrare un terminale, ma con pulsanti cliccabili per una navigazione immediata su dispositivi mobili.\nLo stile minimal e il font Consolas riflettono la mia passione per la programmazione.`,
-      downloads: `Progetti scaricabili:\n- Progetto 1: <a href='https://kekkotech.com/downloads/progetto1.zip' target='_blank'>Scarica Progetto 1</a> (2.3 MB)\n- Progetto 2: <a href='https://kekkotech.com/downloads/progetto2.zip' target='_blank'>Scarica Progetto 2</a> (5.7 MB)`,
-      contact: `Contatti:\nEmail: <a href='mailto:matteo@example.com'>matteo@example.com</a>\nInstagram: <a href='https://instagram.com/matteo.checcacci' target='_blank'>@matteo.checcacci</a>`
-    };
-
+    // siteContent is defined in /js/content.js and includes keys: home, about, downloads, contact
     document.querySelectorAll('.menu a[data-section]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         const sec = link.getAttribute('data-section');
-        document.getElementById('content').innerHTML = sections[sec];
+        document.getElementById('content').innerHTML = siteContent[sec];
       });
     });
   </script>
