@@ -49,6 +49,12 @@
       50% { border-color: #0f0; }
     }
   </style>
+  <script>
+    // Reindirizzamento mobile
+    if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = "https://kekkotech.com/mobile";
+    }
+  </script>
 </head>
 <body>
   <div class="terminal" id="terminal"></div>
