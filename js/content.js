@@ -15,7 +15,7 @@ Tocca un comando per esplorare.`,
   about: `Questo sito è progettato per sembrare un terminale, ma con pulsanti cliccabili per una navigazione immediata su dispositivi mobili.
 Lo stile minimal e il font Consolas riflettono la mia passione per la programmazione.`,
 
-  downloads: `Progetti scaricabili:
+  projects: `Progetti scaricabili:
 - Progetto 1: <a href='https://downloads.kekkotech.com/projects/progetto1/progetto1.html' target='_blank'>Vai a Progetto1</a>
 - Progetto 2: <a href='https://downloads.kekkotech.com/projects/progetto2/progetto2.html' target='_blank'>Vai a Progetto 2</a>`,
 
