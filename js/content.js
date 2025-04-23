@@ -1,11 +1,15 @@
 
  const siteContent = {
-   help: 'Elenco dei comandi home: homepage 
-    about, downloads, contacts',
+   help: `Elenco dei comandi:
+   home: per tornare all'home page
+   about: per scoprire qualcosa in più su chi sono e cosa faccio
+   downloads: per scaricare i progetti che ho realizzato
+   didattica (non attivo): per accedere alla pagina relativa alla didattica
+   contacts: per un elenco dei contatti`,
    homemobile: `Benvenuto su kekkotech.com!
  Tocca un comando per esplorare.`,
-  home: 'Benvenuto su kekkotech.com!
-   Digita [help] per iniziare ad eslporare',
+  home: `Benvenuto su kekkotech.com!
+   Digita 'help' per iniziare ad eslporare`,
    about: `Questo sito è progettato per sembrare un terminale, ma con pulsanti cliccabili per una navigazione immediata su dispositivi mobili.
  Lo stile minimal e il font Consolas riflettono la mia passione per la programmazione.`,
    downloads: `Progetti scaricabili:
