@@ -55,7 +55,9 @@
 
   <script>
     const sections = {
-      help: ["[about] [projects] [contact]"],
+      help: [
+        '<a href="#" data-section="about">[about]</a> <a href="#" data-section="projects">[projects]</a> <a href="#" data-section="contact">[contact]</a>'
+      ],
       about: [
         "Questo sito è stato progettato per sembrare un terminale.",
         "Lo stile minimale riflette la mia passione per la programmazione."
@@ -90,7 +92,7 @@
       function type() {
         if (lineIndex < lines.length) {
           if (charIndex < lines[lineIndex].length) {
-            typingLine.textContent += lines[lineIndex].charAt(charIndex);
+            typingLine.innerHTML += lines[lineIndex].charAt(charIndex);
             charIndex++;
             setTimeout(type, 30);
           } else {
@@ -113,7 +115,7 @@
     function addCommandLine(text) {
       const line = document.createElement("div");
       line.classList.add("input-line");
-      line.textContent = text;
+      line.textContent = "$ " + text;
       terminal.appendChild(line);
     }
 
@@ -122,15 +124,16 @@
       sections[section].forEach(line => {
         const output = document.createElement("div");
         output.classList.add("input-line");
-        output.textContent = line;
+        output.innerHTML = line;
         terminal.appendChild(output);
       });
       terminal.scrollTop = terminal.scrollHeight;
     }
 
     terminal.addEventListener("click", function(e) {
-      if (e.target.tagName === "A") {
-        const section = e.target.textContent.replace(/\[|\]/g, "");
+      if (e.target.matches("a[data-section]")) {
+        e.preventDefault();
+        const section = e.target.getAttribute("data-section");
         if (sections[section]) showSection(section);
       }
     });
