@@ -12,143 +12,58 @@
       color: #0f0;
       font-family: Consolas, monospace;
       font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
 
     .terminal {
-      max-width: 800px;
-      margin: auto;
+      max-width: 600px;
       border: 1px solid #0f0;
       padding: 20px;
       box-shadow: 0 0 10px #0f0;
+      text-align: center;
     }
 
-    .input-line::before {
-      content: "$ ";
-      color: #0f0;
-    }
-
-    .typed {
+    .sad-face {
+      font-size: 48px;
+      line-height: 1;
+      margin: 20px 0;
       white-space: pre;
-      overflow: hidden;
-      border-right: .15em solid #0f0;
-      animation: blink-caret 0.75s step-end infinite;
     }
 
-    @keyframes blink-caret {
-      from, to { border-color: transparent }
-      50% { border-color: #0f0; }
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #000;
+      color: #0f0;
+      border: 1px solid #0f0;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: Consolas, monospace;
+    }
+
+    .btn:hover {
+      background: #003300;
     }
   </style>
+  <script>
+    // Se l'utente clicca il bottone, torna alla home e chiude la scheda
+    function goHome() {
+      window.location.href = '/';
+    }
+  </script>
 </head>
 <body>
-  <div class="terminal" id="terminal"></div>
-
-  <script>
-    const sections = {
-      help: [
-        "Comandi disponibili: help, about, contact, home"
-      ],
-      about: [
-        "Siamo spiacenti, la pagina che stai cercando non esiste.",
-        "Digita 'home' per tornare alla pagina principale."
-      ],
-      contact: [
-        "Email: <a href='mailto:matteo@example.com'>matteo@example.com</a>",
-        "Instagram: <a href='https://instagram.com/matteo.checcacci' target='_blank'>instagram.com/matteo.checcacci</a>"
-      ],
-      error: [
-        "404 - Pagina non trovata.",
-        ":(",
-        "La pagina che stai cercando non esiste o è stata spostata."
-      ]
-    };
-
-    const homeLines = [
-      "Benvenuto su kekkotech.com!",
-      "Il mio nome è Matteo.",
-      "Sono uno studente di ingegneria informatica presso il Politecnico di Milano.",
-      "Digita help per vedere i comandi disponibili.",
-      ""
-    ];
-
-    const terminal = document.getElementById("terminal");
-
-    function clearTerminal() {
-      terminal.innerHTML = "";
-    }
-
-    function printLine(text, typed = false) {
-      const line = document.createElement("div");
-      line.classList.add("input-line");
-      line.innerHTML = typed ? "$ <span class='typed'>" + text + "</span>" : "$ " + text;
-      terminal.appendChild(line);
-    }
-
-    function printOutput(text) {
-      const line = document.createElement("div");
-      line.classList.add("input-line");
-      line.innerHTML = text;
-      terminal.appendChild(line);
-    }
-
-    function showSection(section) {
-      if (sections[section]) {
-        sections[section].forEach(line => printOutput(line));
-        printOutput("\n(Digita 'home' per tornare alla schermata iniziale)");
-      } else {
-        printOutput("Comando non riconosciuto. Digita 'help' per una lista di comandi.");
-      }
-    }
-
-    function promptInput() {
-      const inputLine = document.createElement("div");
-      inputLine.classList.add("input-line");
-
-      const span = document.createElement("span");
-      span.textContent = "$ ";
-
-      const input = document.createElement("input");
-      input.style.background = "black";
-      input.style.color = "#0f0";
-      input.style.border = "none";
-      input.style.outline = "none";
-      input.style.font = "inherit";
-      input.autofocus = true;
-
-      input.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-          const command = input.value.trim().toLowerCase();
-          input.disabled = true;
-          input.style.color = "#555";
-          handleCommand(command);
-        }
-      });
-
-      inputLine.appendChild(span);
-      inputLine.appendChild(input);
-      terminal.appendChild(inputLine);
-      input.focus();
-      terminal.scrollTop = terminal.scrollHeight;
-    }
-
-    function handleCommand(cmd) {
-      if (cmd === "home") {
-        clearTerminal();
-        boot();
-        return;
-      }
-      printLine(cmd);
-      showSection(cmd);
-      promptInput();
-    }
-
-    function boot() {
-      printLine("404 - Pagina non trovata");
-      sections.error.forEach(line => printOutput(line));
-      promptInput();
-    }
-
-    boot();
-  </script>
+  <div class="terminal">
+    <div>$ 404 - Pagina non trovata</div>
+    <div class="sad-face">
+      (╯︵╰,)
+    </div>
+    <div>Ops! La pagina che cerchi non esiste.</div>
+    <a href="#" class="btn" onclick="goHome()">Torna alla Home</a>
+  </div>
 </body>
 </html>
