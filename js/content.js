@@ -2,7 +2,7 @@ const siteContent = {
   help: `Elenco dei comandi:
 home: per tornare all'home page
 about: per scoprire qualcosa in più su chi sono e cosa faccio
-downloads: per scaricare i progetti che ho realizzato
+projects: per scaricare i progetti che ho realizzato
 didattica (non attivo): per accedere alla pagina relativa alla didattica
 contacts: per un elenco dei contatti`,
   
