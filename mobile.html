@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Home Mobile | Kekkotech</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 10px;
+      background-color: #000;
+      color: #0f0;
+      font-family: Consolas, monospace;
+      font-size: 18px;
+    }
+    .terminal {
+      border: 1px solid #0f0;
+      padding: 15px;
+      max-width: 100%;
+      box-shadow: 0 0 8px #0f0;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .menu a {
+      display: block;
+      padding: 12px;
+      background: #000;
+      border: 1px solid #0f0;
+      border-radius: 4px;
+      text-align: center;
+      text-decoration: none;
+      color: #0f0;
+      font-weight: bold;
+    }
+    .menu a:hover {
+      background: #003300;
+    }
+    .content {
+      white-space: pre-wrap;
+      line-height: 1.4;
+    }
+    .content a {
+      color: #0ff;
+      text-decoration: none;
+    }
+    .content a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="menu">
+      <a href="#" data-section="about">About</a>
+      <a href="#" data-section="downloads">Downloads</a>
+      <a href="#" data-section="contact">Contact</a>
+      <a href="/">Home</a>
+    </div>
+    <div class="content" id="content">
+      Benvenuto su kekkotech.com/mobile!
+      \nTocca un comando per esplorare.
+    </div>
+  </div>
+  <script>
+    const sections = {
+      about: `Questo sito è progettato per sembrare un terminale, ma con pulsanti cliccabili per una navigazione immediata su dispositivi mobili.\nLo stile minimal e il font Consolas riflettono la mia passione per la programmazione.`,
+      downloads: `Progetti scaricabili:\n- Progetto 1: <a href='https://kekkotech.com/downloads/progetto1.zip' target='_blank'>Scarica Progetto 1</a> (2.3 MB)\n- Progetto 2: <a href='https://kekkotech.com/downloads/progetto2.zip' target='_blank'>Scarica Progetto 2</a> (5.7 MB)`,
+      contact: `Contatti:\nEmail: <a href='mailto:matteo@example.com'>matteo@example.com</a>\nInstagram: <a href='https://instagram.com/matteo.checcacci' target='_blank'>@matteo.checcacci</a>`
+    };
+
+    document.querySelectorAll('.menu a[data-section]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const sec = link.getAttribute('data-section');
+        document.getElementById('content').innerHTML = sections[sec];
+      });
+    });
+  </script>
+</body>
+</html>
