@@ -53,7 +53,7 @@
   <div class="terminal" id="terminal"></div>
   <script>
     const terminal = document.getElementById('terminal');
-    // Helper to append line
+
     function appendLine(text, isTyped) {
       const line = document.createElement('div');
       line.classList.add('input-line');
@@ -67,7 +67,6 @@
       return line;
     }
 
-    // Typewriter effect for an array of lines
     function typeLines(lines, onComplete) {
       let i = 0;
       function nextLine() {
@@ -96,9 +95,16 @@
 
     function promptInput() {
       const inputLine = appendLine('', false);
-      const span = document.createElement('span'); span.textContent = '$ ';
+      const span = document.createElement('span');
+      span.textContent = '$ ';
       const input = document.createElement('input');
-      Object.assign(input.style, { background: 'black', color: '#0f0', border: 'none', outline: 'none', font: 'inherit' });
+      Object.assign(input.style, {
+        background: 'black',
+        color: '#0f0',
+        border: 'none',
+        outline: 'none',
+        font: 'inherit'
+      });
       input.autofocus = true;
       input.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
@@ -108,7 +114,6 @@
           handleCommand(cmd);
         }
       });
-      // Clear placeholder text
       inputLine.textContent = '';
       inputLine.append(span, input);
       input.focus();
