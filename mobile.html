@@ -84,10 +84,10 @@
         return;
       }
 
-      const html = ['📦 <strong>Progetti disponibili:</strong><br><br>'];
+      const html = ['<strong>Progetti disponibili:</strong><br><br>'];
       projectList.forEach(p => {
         html.push(
-          `🔹 <strong>${p.name}</strong><br>` +
+          `<strong>${p.name}</strong><br>` +
           `<a href="${p.info}" target="_blank">Info</a> | ` +
           `<a href="${p.zip}" target="_blank">Download</a><br><br>`
         );
