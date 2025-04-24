@@ -42,12 +42,12 @@
     a:hover { text-decoration: underline; }
   </style>
   <script>
-    // Redirect mobile
     if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/mobile";
     }
   </script>
   <script src="/js/content.js"></script>
+  <script src="https://downloads.kekkotech.com/js/list.js"></script>
 </head>
 <body>
   <div class="terminal" id="terminal"></div>
@@ -132,18 +132,32 @@
     }
 
     function showContent(key) {
-      const data = siteContent[key] || `Comando non riconosciuto. Digita 'help' per lista.`;
-      data.split('\n').forEach(line => {
-        const out = document.createElement('div');
-        out.classList.add('input-line');
-        out.innerHTML = line;
-        terminal.appendChild(out);
-      });
-      if (['help','about','projects','contacts'].includes(key)) {
+      if (key === "projects" && typeof projectList !== "undefined") {
+        appendLine("Progetti disponibili:", false);
+        projectList.forEach(p => {
+          const line = document.createElement('div');
+          line.classList.add('input-line');
+          line.innerHTML = `📦 <strong>${p.name}</strong> - <a href="${p.info}" target="_blank">Info</a> | <a href="${p.zip}" target="_blank">Download</a>`;
+          terminal.appendChild(line);
+        });
         const info = document.createElement('div');
         info.classList.add('input-line');
         info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
         terminal.appendChild(info);
+      } else {
+        const data = siteContent[key] || `Comando non riconosciuto. Digita 'help' per lista.`;
+        data.split('\n').forEach(line => {
+          const out = document.createElement('div');
+          out.classList.add('input-line');
+          out.innerHTML = line;
+          terminal.appendChild(out);
+        });
+        if (['help','about','contacts'].includes(key)) {
+          const info = document.createElement('div');
+          info.classList.add('input-line');
+          info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
+          terminal.appendChild(info);
+        }
       }
     }
 
