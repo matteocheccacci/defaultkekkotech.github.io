@@ -147,6 +147,8 @@
 
     function handleCommand(cmd) {
       if (cmd === 'cls') {
+        // Easteregg: rimuove animazione arcobaleno al reset
+        terminal.classList.remove('rainbow');
         terminal.innerHTML = '';
         boot();
         return;
@@ -167,22 +169,17 @@
         const videoContainer = document.createElement('div');
         videoContainer.classList.add('input-line');
 
-        const video = document.createElement('video');
-        video.setAttribute('controls', '');
-        video.setAttribute('width', '100%');
-        // Easteregg: sorgente del video rickroll
-        const source = document.createElement('source');
-        source.setAttribute('src', 'https://youtu.be/dQw4w9WgXcQ?si=KPkawdFEXf5TBfJW');
-        source.setAttribute('type', 'video/mp4');
+        // Easteregg: incorpora YouTube iframe
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('width', '100%');
+        iframe.setAttribute('height', '360');
+        iframe.setAttribute('src', 'https://www.youtube.com/embed/dQw4w9WgXcQ?si=KPkawdFEXf5TBfJW&autoplay=1');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'autoplay; encrypted-media');
+        iframe.setAttribute('allowfullscreen', '');
 
-        video.appendChild(source);
-        videoContainer.appendChild(video);
+        videoContainer.appendChild(iframe);
         terminal.appendChild(videoContainer);
-
-        // Rimuove dopo la fine del video
-        video.addEventListener('ended', () => {
-          terminal.classList.remove('rainbow');
-        });
 
         const info = document.createElement('div');
         info.classList.add('input-line');
