@@ -116,7 +116,7 @@
     }
 
     function handleCommand(cmd) {
-      if (cmd === 'home') {
+      if (cmd === 'cls') {
         terminal.innerHTML = '';
         boot();
         return;
@@ -137,13 +137,13 @@
       if (['help','about','projects','contacts'].includes(key)) {
         const info = document.createElement('div');
         info.classList.add('input-line');
-        info.innerHTML = "<br>(Digita 'home' per tornare all'inizio)";
+        info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
         terminal.appendChild(info);
       }
     }
 
     function boot() {
-      const lines = siteContent.home.split('\n');
+      const lines = siteContent.cls.split('\n');
       typeLines(lines, promptInput);
     }
 
