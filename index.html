@@ -77,6 +77,7 @@
 <body>
   <div class="terminal" id="terminal"></div>
   <script>
+    let player; // YouTube player instance
     const terminal = document.getElementById('terminal');
 
     function appendLine(text, isTyped) {
@@ -153,40 +154,48 @@
         boot();
         return;
       }
+      if (cmd === 'rickroll') {
+        showContent('rickroll');
+        return; // non richiamare promptInput finché non finisce il video
+      }
       appendLine(cmd, false);
       showContent(cmd);
       promptInput();
     }
 
     function showContent(key) {
-      // Easteregg: riproduzione video rickroll con bordo arcobaleno
+      // Easteregg: riproduzione video rickroll con bordo arcobaleno e blocco input
       if (key === "rickroll") {
         appendLine("You got rickrolled 🎵 Never gonna give you up...", false);
-
-        // Aggiunge classe rainbow per animare il bordo
         terminal.classList.add('rainbow');
 
         const videoContainer = document.createElement('div');
         videoContainer.classList.add('input-line');
 
-        // Easteregg: incorpora YouTube iframe
-        const iframe = document.createElement('iframe');
-        iframe.setAttribute('width', '100%');
-        iframe.setAttribute('height', '360');
-        iframe.setAttribute('src', 'https://www.youtube.com/embed/dQw4w9WgXcQ?si=KPkawdFEXf5TBfJW&autoplay=1');
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('allow', 'autoplay; encrypted-media');
-        iframe.setAttribute('allowfullscreen', '');
-
+        const iframe = document.createElement('div');
+        iframe.id = 'player';
         videoContainer.appendChild(iframe);
         terminal.appendChild(videoContainer);
 
-        const info = document.createElement('div');
-        info.classList.add('input-line');
-        info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
-        terminal.appendChild(info);
+        // Carica API YouTube
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
 
-        return; // evita il blocco else
+        // Istanzia player
+        window.onYouTubeIframeAPIReady = function() {
+          player = new YT.Player('player', {
+            height: '360',
+            width: '100%',
+            videoId: 'dQw4w9WgXcQ',
+            playerVars: { 'autoplay': 1, 'controls': 1 },
+            events: {
+              'onStateChange': onPlayerStateChange
+            }
+          });
+        };
+
+        return;
       }
 
       // Contenuti standard
@@ -198,10 +207,7 @@
           line.innerHTML =  `<strong>${p.name}</strong> - <a href="${p.info}" target="_blank">Info</a> | <a href="${p.zip}" target="_blank">Download</a>`;
           terminal.appendChild(line);
         });
-        const info = document.createElement('div');
-        info.classList.add('input-line');
-        info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
-        terminal.appendChild(info);
+        appendInfoPrompt();
       } else {
         const data = siteContent[key] || `Comando non riconosciuto. Digita 'help' per lista.`;
         data.split('\n').forEach(line => {
@@ -210,13 +216,24 @@
           out.innerHTML = line;
           terminal.appendChild(out);
         });
-        if (['help','about','contacts'].includes(key)) {
-          const info = document.createElement('div');
-          info.classList.add('input-line');
-          info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
-          terminal.appendChild(info);
-        }
+        if (['help','about','contacts'].includes(key)) appendInfoPrompt();
       }
+    }
+
+    function onPlayerStateChange(event) {
+      // Stato 0 = ended
+      if (event.data === YT.PlayerState.ENDED) {
+        terminal.classList.remove('rainbow');
+        appendInfoPrompt();
+        promptInput();
+      }
+    }
+
+    function appendInfoPrompt() {
+      const info = document.createElement('div');
+      info.classList.add('input-line');
+      info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
+      terminal.appendChild(info);
     }
 
     function boot() {
