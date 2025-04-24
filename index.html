@@ -20,7 +20,6 @@
       padding: 20px;
       box-shadow: 0 0 10px #0f0;
     }
-    /* Easteregg: animazione arcobaleno per il bordo e l'ombra */
     @keyframes rainbow-border {
       0% { border-color: red; }
       14% { border-color: orange; }
@@ -66,7 +65,6 @@
     a:hover { text-decoration: underline; }
   </style>
   <script>
-    // Redirect mobile users
     if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/mobile";
     }
@@ -77,7 +75,7 @@
 <body>
   <div class="terminal" id="terminal"></div>
   <script>
-    let player; // YouTube player instance
+    let player;
     const terminal = document.getElementById('terminal');
 
     function appendLine(text, isTyped) {
@@ -148,7 +146,6 @@
 
     function handleCommand(cmd) {
       if (cmd === 'cls') {
-        // Easteregg: rimuove animazione arcobaleno al reset
         terminal.classList.remove('rainbow');
         terminal.innerHTML = '';
         boot();
@@ -156,7 +153,7 @@
       }
       if (cmd === 'rickroll') {
         showContent('rickroll');
-        return; // non richiamare promptInput finché non finisce il video
+        return;
       }
       appendLine(cmd, false);
       showContent(cmd);
@@ -164,7 +161,6 @@
     }
 
     function showContent(key) {
-      // Easteregg: riproduzione video rickroll con bordo arcobaleno e blocco input
       if (key === "rickroll") {
         appendLine("You got rickrolled 🎵 Never gonna give you up...", false);
         terminal.classList.add('rainbow');
@@ -177,12 +173,10 @@
         videoContainer.appendChild(iframe);
         terminal.appendChild(videoContainer);
 
-        // Carica API YouTube
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         document.body.appendChild(tag);
 
-        // Istanzia player
         window.onYouTubeIframeAPIReady = function() {
           player = new YT.Player('player', {
             height: '360',
@@ -194,11 +188,9 @@
             }
           });
         };
-        window.close;
         return;
       }
 
-      // Contenuti standard
       if (key === "projects" && typeof projectList !== "undefined") {
         appendLine("Progetti disponibili:", false);
         projectList.forEach(p => {
@@ -209,39 +201,4 @@
         });
         appendInfoPrompt();
       } else {
-        const data = siteContent[key] || `Comando non riconosciuto. Digita 'help' per lista.`;
-        data.split('\n').forEach(line => {
-          const out = document.createElement('div');
-          out.classList.add('input-line');
-          out.innerHTML = line;
-          terminal.appendChild(out);
-        });
-        if (['help','about','contacts'].includes(key)) appendInfoPrompt();
-      }
-    }
-
-    function onPlayerStateChange(event) {
-      // Stato 0 = ended
-      if (event.data === YT.PlayerState.ENDED) {
-        terminal.classList.remove('rainbow');
-        appendInfoPrompt();
-        promptInput();
-      }
-    }
-
-    function appendInfoPrompt() {
-      const info = document.createElement('div');
-      info.classList.add('input-line');
-      info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
-      terminal.appendChild(info);
-    }
-
-    function boot() {
-      const lines = siteContent.cls.split('\n');
-      typeLines(lines, promptInput);
-    }
-
-    boot();
-  </script>
-</body>
-</html>
+        const data = siteContent[key] || `Comando
