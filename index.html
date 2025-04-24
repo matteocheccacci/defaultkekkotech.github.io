@@ -20,6 +20,30 @@
       padding: 20px;
       box-shadow: 0 0 10px #0f0;
     }
+    /* Easteregg: animazione arcobaleno per il bordo e l'ombra */
+    @keyframes rainbow-border {
+      0% { border-color: red; }
+      14% { border-color: orange; }
+      28% { border-color: yellow; }
+      42% { border-color: green; }
+      56% { border-color: blue; }
+      70% { border-color: indigo; }
+      84% { border-color: violet; }
+      100% { border-color: red; }
+    }
+    @keyframes rainbow-shadow {
+      0% { box-shadow: 0 0 10px red; }
+      14% { box-shadow: 0 0 10px orange; }
+      28% { box-shadow: 0 0 10px yellow; }
+      42% { box-shadow: 0 0 10px green; }
+      56% { box-shadow: 0 0 10px blue; }
+      70% { box-shadow: 0 0 10px indigo; }
+      84% { box-shadow: 0 0 10px violet; }
+      100% { box-shadow: 0 0 10px red; }
+    }
+    .rainbow {
+      animation: rainbow-border 2s linear infinite, rainbow-shadow 2s linear infinite;
+    }
     .input-line::before {
       content: "$ ";
       color: #0f0;
@@ -42,6 +66,7 @@
     a:hover { text-decoration: underline; }
   </style>
   <script>
+    // Redirect mobile users
     if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/mobile";
     }
@@ -132,6 +157,42 @@
     }
 
     function showContent(key) {
+      // Easteregg: riproduzione video rickroll con bordo arcobaleno
+      if (key === "rickroll") {
+        appendLine("You got rickrolled 🎵 Never gonna give you up...", false);
+
+        // Aggiunge classe rainbow per animare il bordo
+        terminal.classList.add('rainbow');
+
+        const videoContainer = document.createElement('div');
+        videoContainer.classList.add('input-line');
+
+        const video = document.createElement('video');
+        video.setAttribute('controls', '');
+        video.setAttribute('width', '100%');
+        // Easteregg: sorgente del video rickroll
+        const source = document.createElement('source');
+        source.setAttribute('src', 'https://youtu.be/dQw4w9WgXcQ?si=KPkawdFEXf5TBfJW');
+        source.setAttribute('type', 'video/mp4');
+
+        video.appendChild(source);
+        videoContainer.appendChild(video);
+        terminal.appendChild(videoContainer);
+
+        // Rimuove dopo la fine del video
+        video.addEventListener('ended', () => {
+          terminal.classList.remove('rainbow');
+        });
+
+        const info = document.createElement('div');
+        info.classList.add('input-line');
+        info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
+        terminal.appendChild(info);
+
+        return; // evita il blocco else
+      }
+
+      // Contenuti standard
       if (key === "projects" && typeof projectList !== "undefined") {
         appendLine("Progetti disponibili:", false);
         projectList.forEach(p => {
@@ -144,12 +205,7 @@
         info.classList.add('input-line');
         info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
         terminal.appendChild(info);
-        } 
-      if(key === "rickroll") {
-        appendLine("You got rickrolled", false);
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=wGKH-JMboQHEGa2o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      }
-      else {
+      } else {
         const data = siteContent[key] || `Comando non riconosciuto. Digita 'help' per lista.`;
         data.split('\n').forEach(line => {
           const out = document.createElement('div');
