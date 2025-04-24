@@ -145,6 +145,10 @@
         info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
         terminal.appendChild(info);
         } 
+      if(key === "rickroll") {
+        appendLine("You got rickrolled", false);
+        window.location = "https://youtu.be/dQw4w9WgXcQ?si=zUDsdO2rsspCPbGW";
+      }
       else {
         const data = siteContent[key] || `Comando non riconosciuto. Digita 'help' per lista.`;
         data.split('\n').forEach(line => {
