@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Home Mobile | Kekkotech</title>
   <style>
-    /* Lo stesso stile di prima */
     body {
       margin: 0;
       padding: 10px;
@@ -54,13 +53,14 @@
     }
   </style>
   <script>
-    // Se l'utente accede da mobile, rimane qui; altrimenti reindirizza alla desktop
+    // Reindirizzamento alla desktop se non è mobile
     if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/";
     }
   </script>
-  <!-- Shared content definitions -->
+  <!-- Shared content -->
   <script src="/js/content.js"></script>
+  <script src="https://downloads.kekkotech.com/js/list.js"></script>
 </head>
 <body>
   <div class="terminal">
@@ -72,21 +72,44 @@
     <div class="content" id="content"></div>
   </div>
   <script>
-    // Inizializza il contenuto iniziale
-    document.getElementById('content').innerHTML = siteContent.homemobile.replace(/\n/g, '<br>');
+    const contentDiv = document.getElementById('content');
 
-    // Funzione per caricare il contenuto delle sezioni
+    function showProjects() {
+      if (typeof projectList === 'undefined') {
+        contentDiv.innerHTML = "Errore: Impossibile caricare i progetti.";
+        return;
+      }
+      if (projectList.length === 0) {
+        contentDiv.innerHTML = "Nessun progetto disponibile al momento.";
+        return;
+      }
+
+      const html = ['📦 <strong>Progetti disponibili:</strong><br><br>'];
+      projectList.forEach(p => {
+        html.push(
+          `🔹 <strong>${p.name}</strong><br>` +
+          `<a href="${p.info}" target="_blank">Info</a> | ` +
+          `<a href="${p.zip}" target="_blank">Download</a><br><br>`
+        );
+      });
+      contentDiv.innerHTML = html.join('');
+    }
+
+    // Mostra contenuto iniziale (homepage mobile)
+    contentDiv.innerHTML = siteContent.homemobile.replace(/\n/g, '<br>');
+
+    // Gestione click menu
     document.querySelectorAll('.menu a[data-section]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         const sec = link.getAttribute('data-section');
-        const sectionContent = siteContent[sec];
-        
-        // Verifica se il contenuto esiste per la sezione e caricalo
-        if (sectionContent) {
-          document.getElementById('content').innerHTML = sectionContent.replace(/\n/g, '<br>');
+
+        if (sec === 'projects') {
+          showProjects();
+        } else if (siteContent[sec]) {
+          contentDiv.innerHTML = siteContent[sec].replace(/\n/g, '<br>');
         } else {
-          document.getElementById('content').innerHTML = `Sezione ${sec} non trovata.`;
+          contentDiv.innerHTML = `Sezione "${sec}" non trovata.`;
         }
       });
     });
