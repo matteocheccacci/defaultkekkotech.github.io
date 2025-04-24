@@ -144,7 +144,8 @@
         info.classList.add('input-line');
         info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
         terminal.appendChild(info);
-      } else {
+        } 
+      else {
         const data = siteContent[key] || `Comando non riconosciuto. Digita 'help' per lista.`;
         data.split('\n').forEach(line => {
           const out = document.createElement('div');
