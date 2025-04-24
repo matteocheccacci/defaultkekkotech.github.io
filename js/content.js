@@ -1,12 +1,12 @@
 const siteContent = {
   help: `Elenco dei comandi:
-home: per tornare all'home page
+cls: per pulire lo schermo
 about: per scoprire qualcosa in più su chi sono e cosa faccio
 projects: per scaricare i progetti che ho realizzato
 didattica (non attivo): per accedere alla pagina relativa alla didattica
 contacts: per un elenco dei contatti`,
   
-  home: `Benvenuto su kekkotech.com!
+  cls: `Benvenuto su kekkotech.com!
 Digita 'help' per iniziare ad esplorare`,
 
   homemobile: `Benvenuto su kekkotech.com!
