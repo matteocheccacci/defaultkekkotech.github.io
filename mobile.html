@@ -18,6 +18,32 @@
       padding: 15px;
       max-width: 100%;
       box-shadow: 0 0 8px #0f0;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    /* Easteregg: animazione arcobaleno per il bordo e l’ombra */
+    @keyframes rainbow-border {
+      0% { border-color: red; }
+      14% { border-color: orange; }
+      28% { border-color: yellow; }
+      42% { border-color: green; }
+      56% { border-color: blue; }
+      70% { border-color: indigo; }
+      84% { border-color: violet; }
+      100% { border-color: red; }
+    }
+    @keyframes rainbow-shadow {
+      0% { box-shadow: 0 0 8px red; }
+      14% { box-shadow: 0 0 8px orange; }
+      28% { box-shadow: 0 0 8px yellow; }
+      42% { box-shadow: 0 0 8px green; }
+      56% { box-shadow: 0 0 8px blue; }
+      70% { box-shadow: 0 0 8px indigo; }
+      84% { box-shadow: 0 0 8px violet; }
+      100% { box-shadow: 0 0 8px red; }
+    }
+    .rainbow {
+      animation: rainbow-border 2s linear infinite,
+                 rainbow-shadow 2s linear infinite;
     }
     .menu {
       display: flex;
@@ -53,7 +79,7 @@
     }
   </style>
   <script>
-    // Reindirizzamento alla desktop se non è mobile
+    // Se non è mobile, torna alla versione desktop
     if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/";
     }
@@ -61,29 +87,35 @@
   <!-- Shared content -->
   <script src="/js/content.js"></script>
   <script src="https://downloads.kekkotech.com/js/list.js"></script>
+  <!-- YouTube IFrame API will essere caricato solo all'occorrenza -->
 </head>
 <body>
-  <div class="terminal">
+  <div class="terminal" id="terminal">
     <div class="menu">
-      <a href="#" data-section="about">About</a>
+      <a href="#" data-section="about" id="about-btn">About</a>
       <a href="#" data-section="projects">Projects</a>
       <a href="#" data-section="contacts">Contacts</a>
     </div>
     <div class="content" id="content"></div>
   </div>
+
   <script>
     const contentDiv = document.getElementById('content');
+    const terminal  = document.getElementById('terminal');
+    let aboutClicks = 0;
+    const initialContent = siteContent.homemobile.replace(/\n/g, '<br>');
+    contentDiv.innerHTML = initialContent;
 
+    // Funzione per mostrare la lista progetti
     function showProjects() {
-      if (typeof projectList === 'undefined') {
-        contentDiv.innerHTML = "Errore: Impossibile caricare i progetti.";
+      if (!projectList) {
+        contentDiv.textContent = "Errore: Impossibile caricare i progetti.";
         return;
       }
       if (projectList.length === 0) {
-        contentDiv.innerHTML = "Nessun progetto disponibile al momento.";
+        contentDiv.textContent = "Nessun progetto disponibile al momento.";
         return;
       }
-
       const html = ['<strong>Progetti disponibili:</strong><br><br>'];
       projectList.forEach(p => {
         html.push(
@@ -95,21 +127,66 @@
       contentDiv.innerHTML = html.join('');
     }
 
-    // Mostra contenuto iniziale (homepage mobile)
-    contentDiv.innerHTML = siteContent.homemobile.replace(/\n/g, '<br>');
+    // Easteregg mobile: show rickroll
+    function showRickrollMobile() {
+      // reset counter
+      aboutClicks = 0;
+      // rainbow sui bordi
+      terminal.classList.add('rainbow');
+      // placeholder player
+      contentDiv.innerHTML = '<div id="player"></div>';
+      // carica API
+      if (!window.YT) {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+      } else {
+        onYouTubeIframeAPIReady();
+      }
+    }
 
-    // Gestione click menu
+    // YouTube API ready
+    function onYouTubeIframeAPIReady() {
+      new YT.Player('player', {
+        height: '360',
+        width: '100%',
+        videoId: 'dQw4w9WgXcQ',
+        playerVars: { autoplay: 1, controls: 1 },
+        events: {
+          onStateChange: e => {
+            if (e.data === YT.PlayerState.ENDED) {
+              // ripristina pagina
+              terminal.classList.remove('rainbow');
+              contentDiv.innerHTML = initialContent;
+            }
+          }
+        }
+      });
+    }
+
+    // Gestione click sui link del menu
     document.querySelectorAll('.menu a[data-section]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         const sec = link.getAttribute('data-section');
 
-        if (sec === 'projects') {
+        if (sec === 'about') {
+          aboutClicks++;
+          // alla terza pressione di About
+          if (aboutClicks === 3) {
+            showRickrollMobile();
+            return;
+          }
+          // altrimenti mostra il contenuto About regolare
+          contentDiv.innerHTML = siteContent.about.replace(/\n/g, '<br>');
+        }
+        else if (sec === 'projects') {
+          aboutClicks = 0;
           showProjects();
-        } else if (siteContent[sec]) {
-          contentDiv.innerHTML = siteContent[sec].replace(/\n/g, '<br>');
-        } else {
-          contentDiv.innerHTML = `Sezione "${sec}" non trovata.`;
+        }
+        else if (sec === 'contacts') {
+          aboutClicks = 0;
+          contentDiv.innerHTML = siteContent.contacts.replace(/\n/g, '<br>');
         }
       });
     });
