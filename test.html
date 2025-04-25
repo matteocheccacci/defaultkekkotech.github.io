@@ -40,22 +40,13 @@
       cursor: pointer;
     }
     a:hover { text-decoration: underline; }
-    .review-item {
-      margin: 20px 0;
-      padding: 10px;
-      background-color: #111;
-      border-radius: 5px;
-    }
-    .review-item img {
-      max-width: 100%;
-      border-radius: 5px;
-    }
-    .review-item h3 {
-      margin: 0;
-      color: #fff;
-    }
-    .review-item p {
-      color: #bbb;
+
+    body.redmode,
+    body.redmode * {
+      background-color: #000 !important;
+      color: #f00 !important;
+      border-color: #f00 !important;
+      box-shadow: 0 0 10px #f00 !important;
     }
   </style>
   <script>
@@ -141,38 +132,22 @@
 
     function handleCommand(cmd) {
       if (cmd === 'cls') {
-        terminal.classList.remove('rainbow', 'redmode');
+        terminal.classList.remove('rainbow');
+        document.body.classList.remove('redmode');
         terminal.innerHTML = '';
         boot();
         return;
       }
+
       if (cmd === 'reviews') {
-        terminal.classList.add('redmode');
+        document.body.classList.add('redmode');
         appendLine("Recensioni gaming:", false);
         if (typeof reviews !== "undefined" && Array.isArray(reviews)) {
           reviews.forEach(r => {
-            const reviewItem = document.createElement('div');
-            reviewItem.classList.add('review-item');
-            
-            const img = document.createElement('img');
-            img.src = r.backgroundImage;
-            reviewItem.appendChild(img);
-            
-            const title = document.createElement('h3');
-            title.textContent = r.title;
-            reviewItem.appendChild(title);
-
-            const excerpt = document.createElement('p');
-            excerpt.textContent = r.excerpt;
-            reviewItem.appendChild(excerpt);
-
-            const link = document.createElement('a');
-            link.href = r.link;
-            link.target = "_blank";
-            link.textContent = "Leggi la recensione completa";
-            reviewItem.appendChild(link);
-
-            terminal.appendChild(reviewItem);
+            const line = document.createElement('div');
+            line.classList.add('input-line');
+            line.innerHTML = `<strong>${r.title}</strong> - <a href="${r.link}" target="_blank">Leggi</a>`;
+            terminal.appendChild(line);
           });
         } else {
           appendLine("Nessuna recensione trovata.", false);
@@ -181,10 +156,12 @@
         promptInput();
         return;
       }
+
       if (cmd === 'rickroll') {
         showContent('rickroll');
         return;
       }
+
       if (cmd === 'lavachicken') {
         appendLine("la la la lava chi chi chi chicken", false);
         const img = document.createElement('img');
