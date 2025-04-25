@@ -41,12 +41,14 @@
     }
     a:hover { text-decoration: underline; }
 
-    body.redmode,
-    body.redmode * {
+    /* Modalità redmode */
+    body.redmode {
       background-color: #000 !important;
       color: #f00 !important;
+    }
+    body.redmode * {
+      color: #f00 !important;
       border-color: #f00 !important;
-      box-shadow: 0 0 10px #f00 !important;
     }
   </style>
   <script>
@@ -110,7 +112,7 @@
       const input = document.createElement('input');
       Object.assign(input.style, {
         background: 'black',
-        color: '#0f0',
+        color: 'inherit',
         border: 'none',
         outline: 'none',
         font: 'inherit'
@@ -138,10 +140,9 @@
         boot();
         return;
       }
-
       if (cmd === 'reviews') {
         document.body.classList.add('redmode');
-        appendLine("Recensioni gaming:", false);
+        appendLine("Recensioni gaming disponibili:", false);
         if (typeof reviews !== "undefined" && Array.isArray(reviews)) {
           reviews.forEach(r => {
             const line = document.createElement('div');
@@ -156,12 +157,10 @@
         promptInput();
         return;
       }
-
       if (cmd === 'rickroll') {
         showContent('rickroll');
         return;
       }
-
       if (cmd === 'lavachicken') {
         appendLine("la la la lava chi chi chi chicken", false);
         const img = document.createElement('img');
