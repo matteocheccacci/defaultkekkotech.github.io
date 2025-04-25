@@ -11,7 +11,7 @@ const siteContent = {
   ---------------------------------`,
 
   // 'cls' content is now used as the boot message
-  cls: `Benvenuto su kekkotech.com! Sim Terminal v1.1
+  cls: `Benvenuto su kekkotech.com! 
 Digita 'help' per la lista dei comandi.`,
 
   homemobile: `Benvenuto su kekkotech.com!
