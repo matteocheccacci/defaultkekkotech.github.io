@@ -19,6 +19,7 @@
       border: 1px solid #0f0;
       padding: 20px;
       box-shadow: 0 0 10px #0f0;
+      animation: rainbow-border 2s linear infinite, rainbow-shadow 2s linear infinite;
     }
     @keyframes rainbow-border {
       0% { border-color: red; }
@@ -40,13 +41,11 @@
       84% { box-shadow: 0 0 10px violet; }
       100% { box-shadow: 0 0 10px red; }
     }
-    .rainbow {
-      animation: rainbow-border 2s linear infinite, rainbow-shadow 2s linear infinite;
-    }
     .redmode {
       color: red;
       border-color: red !important;
       box-shadow: 0 0 10px red !important;
+      animation: none; /* Disabilita animazione arco-iris quando è rosso */
     }
     .input-line::before {
       content: "$ ";

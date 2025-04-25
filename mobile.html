@@ -91,7 +91,7 @@
     <div class="menu">
       <a href="#" data-section="about">About</a>
       <a href="#" data-section="projects">Projects</a>
-      <a href="#" data-section="gaming">Gaming</a>
+      <a href="#" data-section="reviews">Reviews</a>
       <a href="#" data-section="contacts">Contacts</a>
     </div>
     <div class="content" id="content"></div>
@@ -101,7 +101,7 @@
     const contentDiv = document.getElementById('content');
     const terminal = document.querySelector('.terminal');
     let aboutClickCount = 0;
-    let gamingClickCount = 0;
+    let reviewsClickCount = 0;
 
     function resetTerminalStyle() {
       terminal.style.borderColor = '#0f0';
@@ -221,21 +221,21 @@
           aboutClickCount = 0;
         }
 
-        if (sec === 'gaming') {
-          gamingClickCount++;
-          if (gamingClickCount === 3) {
+        if (sec === 'reviews') {
+          reviewsClickCount++;
+          if (reviewsClickCount === 3) {
             triggerSteveEasterEgg();
-            gamingClickCount = 0;
+            reviewsClickCount = 0;
             return;
           }
         } else {
-          gamingClickCount = 0;
+          reviewsClickCount = 0;
         }
 
         if (sec === 'projects') {
           resetTerminalStyle();
           showProjects();
-        } else if (sec === 'gaming') {
+        } else if (sec === 'reviews') {
           showGamingReviews();
         } else if (siteContent[sec]) {
           resetTerminalStyle();
