@@ -20,34 +20,6 @@
       padding: 20px;
       box-shadow: 0 0 10px #0f0;
     }
-    @keyframes rainbow-border {
-      0% { border-color: red; }
-      14% { border-color: orange; }
-      28% { border-color: yellow; }
-      42% { border-color: green; }
-      56% { border-color: blue; }
-      70% { border-color: indigo; }
-      84% { border-color: violet; }
-      100% { border-color: red; }
-    }
-    @keyframes rainbow-shadow {
-      0% { box-shadow: 0 0 10px red; }
-      14% { box-shadow: 0 0 10px orange; }
-      28% { box-shadow: 0 0 10px yellow; }
-      42% { box-shadow: 0 0 10px green; }
-      56% { box-shadow: 0 0 10px blue; }
-      70% { box-shadow: 0 0 10px indigo; }
-      84% { box-shadow: 0 0 10px violet; }
-      100% { box-shadow: 0 0 10px red; }
-    }
-    .rainbow {
-      animation: rainbow-border 2s linear infinite, rainbow-shadow 2s linear infinite;
-    }
-    .redmode {
-      color: red;
-      border-color: red !important;
-      box-shadow: 0 0 10px red !important;
-    }
     .input-line::before {
       content: "$ ";
       color: #0f0;
@@ -68,6 +40,23 @@
       cursor: pointer;
     }
     a:hover { text-decoration: underline; }
+    .review-item {
+      margin: 20px 0;
+      padding: 10px;
+      background-color: #111;
+      border-radius: 5px;
+    }
+    .review-item img {
+      max-width: 100%;
+      border-radius: 5px;
+    }
+    .review-item h3 {
+      margin: 0;
+      color: #fff;
+    }
+    .review-item p {
+      color: #bbb;
+    }
   </style>
   <script>
     if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
@@ -76,6 +65,10 @@
   </script>
   <script src="/js/content.js"></script>
   <script src="https://downloads.kekkotech.com/js/list.js"></script>
+  <script src="https://gaming.kekkotech.com/reviews.js"></script>
+</head>
+<body>
+  <div class="terminal" id="terminal"></div>
   <script>
     let player;
     const terminal = document.getElementById('terminal');
@@ -156,8 +149,50 @@
       if (cmd === 'review') {
         terminal.classList.add('redmode');
         appendLine("Recensioni gaming:", false);
-        fetchReviews();  // Carica le recensioni dinamicamente
+        if (typeof reviews !== "undefined" && Array.isArray(reviews)) {
+          reviews.forEach(r => {
+            const reviewItem = document.createElement('div');
+            reviewItem.classList.add('review-item');
+            
+            const img = document.createElement('img');
+            img.src = r.backgroundImage;
+            reviewItem.appendChild(img);
+            
+            const title = document.createElement('h3');
+            title.textContent = r.title;
+            reviewItem.appendChild(title);
+
+            const excerpt = document.createElement('p');
+            excerpt.textContent = r.excerpt;
+            reviewItem.appendChild(excerpt);
+
+            const link = document.createElement('a');
+            link.href = r.link;
+            link.target = "_blank";
+            link.textContent = "Leggi la recensione completa";
+            reviewItem.appendChild(link);
+
+            terminal.appendChild(reviewItem);
+          });
+        } else {
+          appendLine("Nessuna recensione trovata.", false);
+        }
         appendInfoPrompt();
+        promptInput();
+        return;
+      }
+      if (cmd === 'rickroll') {
+        showContent('rickroll');
+        return;
+      }
+      if (cmd === 'lavachicken') {
+        appendLine("la la la lava chi chi chi chicken", false);
+        const img = document.createElement('img');
+        img.src = 'img/steve.gif';
+        img.style.maxWidth = '100%';
+        terminal.appendChild(img);
+        appendInfoPrompt();
+        promptInput();
         return;
       }
 
@@ -166,25 +201,67 @@
       promptInput();
     }
 
-    function fetchReviews() {
-      fetch('https://gaming.kekkotech.com/reviews.js')
-        .then(response => response.json())
-        .then(reviews => {
-          if (reviews.length > 0) {
-            reviews.forEach(r => {
-              const line = document.createElement('div');
-              line.classList.add('input-line');
-              line.innerHTML = `<strong>${r.title}</strong> - <a href="${r.link}" target="_blank">Leggi</a>`;
-              terminal.appendChild(line);
-            });
-          } else {
-            appendLine("Nessuna recensione trovata.", false);
-          }
-        })
-        .catch(error => {
-          console.error('Errore nel caricamento delle recensioni:', error);
-          appendLine("Impossibile caricare le recensioni.", false);
+    function showContent(key) {
+      if (key === "rickroll") {
+        appendLine("You got rickrolled 🎵 Never gonna give you up...", false);
+        terminal.classList.add('rainbow');
+
+        const videoContainer = document.createElement('div');
+        videoContainer.classList.add('input-line');
+        videoContainer.id = 'video-container';
+
+        const iframe = document.createElement('div');
+        iframe.id = 'player';
+        videoContainer.appendChild(iframe);
+        terminal.appendChild(videoContainer);
+
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+
+        window.onYouTubeIframeAPIReady = function() {
+          player = new YT.Player('player', {
+            height: '360',
+            width: '100%',
+            videoId: 'dQw4w9WgXcQ',
+            playerVars: { 'autoplay': 1, 'controls': 1 },
+            events: {
+              'onStateChange': onPlayerStateChange
+            }
+          });
+        };
+        return;
+      }
+
+      if (key === "projects" && typeof projectList !== "undefined") {
+        appendLine("Progetti disponibili:", false);
+        projectList.forEach(p => {
+          const line = document.createElement('div');
+          line.classList.add('input-line');
+          line.innerHTML = `<strong>${p.name}</strong> - <a href="${p.info}" target="_blank">Info</a> | <a href="${p.zip}" target="_blank">Download</a>`;
+          terminal.appendChild(line);
         });
+        appendInfoPrompt();
+      } else {
+        const data = siteContent[key] || "Comando non riconosciuto. Digita 'help' per lista.";
+        data.split('\n').forEach(line => {
+          const out = document.createElement('div');
+          out.classList.add('input-line');
+          out.innerHTML = line;
+          terminal.appendChild(out);
+        });
+        if (['help', 'about', 'contacts'].includes(key)) appendInfoPrompt();
+      }
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        terminal.classList.remove('rainbow');
+        const videoDiv = document.getElementById('video-container');
+        if (videoDiv) videoDiv.remove();
+        appendInfoPrompt();
+        promptInput();
+      }
     }
 
     function appendInfoPrompt() {
@@ -195,7 +272,7 @@
     }
 
     function boot() {
-      const lines = ["Benvenuto nel terminale di Kekkotech!", "Digita 'review' per vedere le recensioni."];
+      const lines = siteContent.cls.split('\n');
       typeLines(lines, promptInput);
     }
 
