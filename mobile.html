@@ -1,195 +1,193 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Home Mobile | Kekkotech</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 10px;
-      background-color: #000;
-      color: #0f0;
-      font-family: Consolas, monospace;
-      font-size: 18px;
-    }
-    .terminal {
-      border: 1px solid #0f0;
-      padding: 15px;
-      max-width: 100%;
-      box-shadow: 0 0 8px #0f0;
-      transition: border-color .3s, box-shadow .3s;
-    }
-    /* Easteregg: animazione arcobaleno per il bordo e l’ombra */
-    @keyframes rainbow-border {
-      0% { border-color: red; }
-      14% { border-color: orange; }
-      28% { border-color: yellow; }
-      42% { border-color: green; }
-      56% { border-color: blue; }
-      70% { border-color: indigo; }
-      84% { border-color: violet; }
-      100% { border-color: red; }
-    }
-    @keyframes rainbow-shadow {
-      0% { box-shadow: 0 0 8px red; }
-      14% { box-shadow: 0 0 8px orange; }
-      28% { box-shadow: 0 0 8px yellow; }
-      42% { box-shadow: 0 0 8px green; }
-      56% { box-shadow: 0 0 8px blue; }
-      70% { box-shadow: 0 0 8px indigo; }
-      84% { box-shadow: 0 0 8px violet; }
-      100% { box-shadow: 0 0 8px red; }
-    }
-    .rainbow {
-      animation: rainbow-border 2s linear infinite,
-                 rainbow-shadow 2s linear infinite;
-    }
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .menu a {
-      display: block;
-      padding: 12px;
-      background: #000;
-      border: 1px solid #0f0;
-      border-radius: 4px;
-      text-align: center;
-      text-decoration: none;
-      color: #0f0;
-      font-weight: bold;
-    }
-    .menu a:hover {
-      background: #003300;
-    }
-    .content {
-      white-space: pre-wrap;
-      line-height: 1.4;
-      text-align: center;
-    }
-    .content a {
-      color: #0ff;
-      text-decoration: none;
-    }
-    .content a:hover {
-      text-decoration: underline;
-    }
-  </style>
-  <script>
-    // Se non è mobile, torna alla versione desktop
-    if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      window.location.href = "https://kekkotech.com/";
-    }
-  </script>
-  <!-- Shared content -->
-  <script src="/js/content.js"></script>
-  <script src="https://downloads.kekkotech.com/js/list.js"></script>
-  <!-- YouTube IFrame API will essere caricato solo all'occorrenza -->
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Home Mobile | Kekkotech</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 10px;
+      background-color: #000;
+      color: #0f0;
+      font-family: Consolas, monospace;
+      font-size: 18px;
+    }
+    .terminal {
+      border: 1px solid #0f0;
+      padding: 15px;
+      max-width: 100%;
+      box-shadow: 0 0 8px #0f0;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    /* Easteregg: animazione arcobaleno per il bordo e l’ombra */
+    @keyframes rainbow-border {
+      0% { border-color: red; }
+      14% { border-color: orange; }
+      28% { border-color: yellow; }
+      42% { border-color: green; }
+      56% { border-color: blue; }
+      70% { border-color: indigo; }
+      84% { border-color: violet; }
+      100% { border-color: red; }
+    }
+    @keyframes rainbow-shadow {
+      0% { box-shadow: 0 0 8px red; }
+      14% { box-shadow: 0 0 8px orange; }
+      28% { box-shadow: 0 0 8px yellow; }
+      42% { box-shadow: 0 0 8px green; }
+      56% { box-shadow: 0 0 8px blue; }
+      70% { box-shadow: 0 0 8px indigo; }
+      84% { box-shadow: 0 0 8px violet; }
+      100% { box-shadow: 0 0 8px red; }
+    }
+    .rainbow {
+      animation: rainbow-border 2s linear infinite,
+                 rainbow-shadow 2s linear infinite;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .menu a {
+      display: block;
+      padding: 12px;
+      background: #000;
+      border: 1px solid #0f0;
+      border-radius: 4px;
+      text-align: center;
+      text-decoration: none;
+      color: #0f0;
+      font-weight: bold;
+    }
+    .menu a:hover {
+      background: #003300;
+    }
+    .content {
+      white-space: pre-wrap;
+      line-height: 1.4;
+      text-align: center;
+    }
+    .content a {
+      color: #0ff;
+      text-decoration: none;
+    }
+    .content a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script>
+    // Se non è mobile, torna alla versione desktop
+    if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = "https://kekkotech.com/";
+    }
+  </script>
+    <script src="/js/content.js"></script>
+  <script src="https://downloads.kekkotech.com/js/list.js"></script>
+  </head>
 <body>
-  <div class="terminal" id="terminal">
-    <div class="menu">
-      <a href="#" data-section="about" id="about-btn">About</a>
-      <a href="#" data-section="projects">Projects</a>
-      <a href="#" data-section="contacts">Contacts</a>
-    </div>
-    <div class="content" id="content"></div>
-  </div>
+  <div class="terminal" id="terminal">
+    <div class="menu">
+      <a href="#" data-section="about" id="about-btn">About</a>
+      <a href="#" data-section="projects">Projects</a>
+      <a href="#" data-section="contacts">Contacts</a>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
 
-  <script>
-    const contentDiv = document.getElementById('content');
-    const terminal  = document.getElementById('terminal');
-    let aboutClicks = 0;
-    const initialContent = siteContent.homemobile.replace(/\n/g, '<br>');
-    contentDiv.innerHTML = initialContent;
+  <script>
+    const contentDiv = document.getElementById('content');
+    const terminal  = document.getElementById('terminal');
+    let aboutClicks = 0;
+    const initialContent = siteContent.homemobile.replace(/\n/g, '<br>');
+    contentDiv.innerHTML = initialContent;
 
-    // Funzione per mostrare la lista progetti
-    function showProjects() {
-      if (!projectList) {
-        contentDiv.textContent = "Errore: Impossibile caricare i progetti.";
-        return;
-      }
-      if (projectList.length === 0) {
-        contentDiv.textContent = "Nessun progetto disponibile al momento.";
-        return;
-      }
-      const html = ['<strong>Progetti disponibili:</strong><br><br>'];
-      projectList.forEach(p => {
-        html.push(
-          <strong>${p.name}</strong><br> +
-          <a href="${p.info}" target="_blank">Info</a> |  +
-          <a href="${p.zip}" target="_blank">Download</a><br><br>
-        );
-      });
-      contentDiv.innerHTML = html.join('');
-    }
+    // Funzione per mostrare la lista progetti
+    function showProjects() {
+      if (!projectList) {
+        contentDiv.textContent = "Errore: Impossibile caricare i progetti.";
+        return;
+      }
+      if (projectList.length === 0) {
+        contentDiv.textContent = "Nessun progetto disponibile al momento.";
+        return;
+      }
+      const html = ['<strong>Progetti disponibili:</strong><br><br>'];
+      projectList.forEach(p => {
+        html.push(
+          `<strong>${p.name}</strong><br>
+          <a href="${p.info}" target="_blank">Info</a> |
+          <a href="${p.zip}" target="_blank">Download</a><br><br>`
+        );
+      });
+      contentDiv.innerHTML = html.join('');
+    }
 
-    // Easteregg mobile: show rickroll
-    function showRickrollMobile() {
-      // reset counter
-      aboutClicks = 0;
-      // rainbow sui bordi
-      terminal.classList.add('rainbow');
-      // placeholder player
-      contentDiv.innerHTML = '<div id="player"></div>';
-      // carica API
-      if (!window.YT) {
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.body.appendChild(tag);
-      } else {
-        onYouTubeIframeAPIReady();
-      }
-    }
+    // Easteregg mobile: show rickroll
+    function showRickrollMobile() {
+      // reset counter
+      aboutClicks = 0;
+      // rainbow sui bordi
+      terminal.classList.add('rainbow');
+      // placeholder player
+      contentDiv.innerHTML = '<div id="player"></div>';
+      // carica API
+      if (!window.YT) {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api"; // URL CORRETTO
+        document.body.appendChild(tag);
+      } else {
+        onYouTubeIframeAPIReady();
+      }
+    }
 
-    // YouTube API ready
-    function onYouTubeIframeAPIReady() {
-      new YT.Player('player', {
-        height: '360',
-        width: '100%',
-        videoId: 'dQw4w9WgXcQ',
-        playerVars: { autoplay: 1, controls: 1 },
-        events: {
-          onStateChange: e => {
-            if (e.data === YT.PlayerState.ENDED) {
-              // ripristina pagina
-              terminal.classList.remove('rainbow');
-              contentDiv.innerHTML = initialContent;
-            }
-          }
-        }
-      });
-    }
+    // YouTube API ready
+    function onYouTubeIframeAPIReady() {
+      new YT.Player('player', {
+        height: '360',
+        width: '100%',
+        videoId: 'dQw4w9WgXcQ',
+        playerVars: { autoplay: 1, controls: 1 },
+        events: {
+          onStateChange: e => {
+            if (e.data === YT.PlayerState.ENDED) {
+              // ripristina pagina
+              terminal.classList.remove('rainbow');
+              contentDiv.innerHTML = initialContent;
+            }
+          }
+        }
+      });
+    }
 
-    // Gestione click sui link del menu
-    document.querySelectorAll('.menu a[data-section]').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        const sec = link.getAttribute('data-section');
+    // Gestione click sui link del menu
+    document.querySelectorAll('.menu a[data-section]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const sec = link.getAttribute('data-section');
 
-        if (sec === 'about') {
-          aboutClicks++;
-          // alla terza pressione di About
-          if (aboutClicks === 3) {
-            showRickrollMobile();
-            return;
-          }
-          // altrimenti mostra il contenuto About regolare
-          contentDiv.innerHTML = siteContent.about.replace(/\n/g, '<br>');
-        }
-        else if (sec === 'projects') {
-          aboutClicks = 0;
-          showProjects();
-        }
-        else if (sec === 'contacts') {
-          aboutClicks = 0;
-          contentDiv.innerHTML = siteContent.contacts.replace(/\n/g, '<br>');
-        }
-      });
-    });
-  </script>
+        if (sec === 'about') {
+          aboutClicks++;
+          // alla terza pressione di About
+          if (aboutClicks === 3) {
+            showRickrollMobile();
+            return;
+          }
+          // altrimenti mostra il contenuto About regolare
+          contentDiv.innerHTML = siteContent.about.replace(/\n/g, '<br>');
+        }
+        else if (sec === 'projects') {
+          aboutClicks = 0;
+          showProjects();
+        }
+        else if (sec === 'contacts') {
+          aboutClicks = 0;
+          contentDiv.innerHTML = siteContent.contacts.replace(/\n/g, '<br>');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
