@@ -17,8 +17,7 @@ Digita 'help' per la lista dei comandi.`,
   homemobile: `Benvenuto su kekkotech.com!
 Tocca un comando per esplorare.`, // Keep for mobile version
 
-  about: `Kekkotech Terminal Interface.
-Questo sito è un esperimento per replicare un'interfaccia a riga di comando nel browser.
+  about: `Questo sito è un esperimento per replicare un'interfaccia a riga di comando nel browser.
 Esplora le sezioni usando i comandi disponibili.`,
 
   // projects content is now handled dynamically in the HTML script
