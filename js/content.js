@@ -2,12 +2,13 @@
 const siteContent = {
   help: `Elenco dei comandi disponibili:
   ---------------------------------
-  cls      : Pulisce lo schermo e mostra il messaggio iniziale.
-  about    : Scopri qualcosa in più su questo sito.
-  projects : Visualizza e scarica i progetti realizzati.
- 
-  contacts : Mostra le informazioni di contatto.
-  rickroll : ???
+  cls        : Pulisce lo schermo e mostra il messaggio iniziale.
+  about      : Scopri qualcosa in più su questo sito.
+  projects   : Visualizza e scarica i progetti realizzati.
+  contacts   : Mostra le informazioni di contatto.
+  rickroll   : ???
+  review     : Guarda le recensioni dei giochi.
+  lavachicken: ????
   ---------------------------------`,
 
   // 'cls' content is now used as the boot message
