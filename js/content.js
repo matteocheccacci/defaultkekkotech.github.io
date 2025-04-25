@@ -5,7 +5,7 @@ const siteContent = {
   cls      : Pulisce lo schermo e mostra il messaggio iniziale.
   about    : Scopri qualcosa in più su questo sito.
   projects : Visualizza e scarica i progetti realizzati.
-  gaming   : Entra nella sezione recensioni giochi.
+ 
   contacts : Mostra le informazioni di contatto.
   rickroll : ???
   ---------------------------------`,
