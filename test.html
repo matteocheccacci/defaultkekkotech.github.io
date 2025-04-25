@@ -13,6 +13,7 @@
       font-family: Consolas, monospace;
       font-size: 16px;
     }
+
     .terminal {
       max-width: 800px;
       margin: auto;
@@ -20,37 +21,55 @@
       padding: 20px;
       box-shadow: 0 0 10px #0f0;
     }
+
+    body.redmode {
+      color: #f00;
+    }
+
+    body.redmode .terminal {
+      border: 1px solid #f00;
+      box-shadow: 0 0 10px #f00;
+    }
+
     .input-line::before {
       content: "$ ";
-      color: #0f0;
+      color: inherit;
     }
+
     .typed {
       white-space: pre;
       overflow: hidden;
-      border-right: .15em solid #0f0;
+      border-right: .15em solid currentColor;
       animation: blink-caret 0.75s step-end infinite;
     }
+
     @keyframes blink-caret {
       from, to { border-color: transparent }
-      50% { border-color: #0f0; }
+      50% { border-color: currentColor; }
     }
+
     a {
       color: #0ff;
       text-decoration: none;
       cursor: pointer;
     }
+
     a:hover { text-decoration: underline; }
 
-    /* Modalità redmode */
-    body.redmode {
-      background-color: #000 !important;
-      color: #f00 !important;
+    .review-list {
+      margin-top: 10px;
     }
-    body.redmode * {
-      color: #f00 !important;
-      border-color: #f00 !important;
+
+    .review-entry {
+      margin: 10px 0;
+    }
+
+    .review-entry a {
+      color: #f55;
+      margin-left: 10px;
     }
   </style>
+
   <script>
     if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/mobile";
@@ -63,18 +82,13 @@
 <body>
   <div class="terminal" id="terminal"></div>
   <script>
-    let player;
     const terminal = document.getElementById('terminal');
 
-    function appendLine(text, isTyped) {
+    function appendLine(text, isTyped = false) {
       const line = document.createElement('div');
       line.classList.add('input-line');
-      if (isTyped) {
-        line.classList.add('typed');
-        line.textContent = '';
-      } else {
-        line.textContent = `$ ${text}`;
-      }
+      line.textContent = isTyped ? '' : `$ ${text}`;
+      if (isTyped) line.classList.add('typed');
       terminal.appendChild(line);
       return line;
     }
@@ -134,39 +148,28 @@
 
     function handleCommand(cmd) {
       if (cmd === 'cls') {
-        terminal.classList.remove('rainbow');
         document.body.classList.remove('redmode');
         terminal.innerHTML = '';
         boot();
         return;
       }
+
       if (cmd === 'reviews') {
         document.body.classList.add('redmode');
-        appendLine("Recensioni gaming disponibili:", false);
+        appendLine("Recensioni gaming:", false);
         if (typeof reviews !== "undefined" && Array.isArray(reviews)) {
+          const list = document.createElement('div');
+          list.classList.add('review-list');
           reviews.forEach(r => {
-            const line = document.createElement('div');
-            line.classList.add('input-line');
-            line.innerHTML = `<strong>${r.title}</strong> - <a href="${r.link}" target="_blank">Leggi</a>`;
-            terminal.appendChild(line);
+            const item = document.createElement('div');
+            item.classList.add('review-entry');
+            item.innerHTML = `<strong>${r.title}</strong><a href="${r.link}" target="_blank">[Leggi]</a>`;
+            list.appendChild(item);
           });
+          terminal.appendChild(list);
         } else {
           appendLine("Nessuna recensione trovata.", false);
         }
-        appendInfoPrompt();
-        promptInput();
-        return;
-      }
-      if (cmd === 'rickroll') {
-        showContent('rickroll');
-        return;
-      }
-      if (cmd === 'lavachicken') {
-        appendLine("la la la lava chi chi chi chicken", false);
-        const img = document.createElement('img');
-        img.src = 'img/steve.gif';
-        img.style.maxWidth = '100%';
-        terminal.appendChild(img);
         appendInfoPrompt();
         promptInput();
         return;
@@ -178,66 +181,14 @@
     }
 
     function showContent(key) {
-      if (key === "rickroll") {
-        appendLine("You got rickrolled 🎵 Never gonna give you up...", false);
-        terminal.classList.add('rainbow');
-
-        const videoContainer = document.createElement('div');
-        videoContainer.classList.add('input-line');
-        videoContainer.id = 'video-container';
-
-        const iframe = document.createElement('div');
-        iframe.id = 'player';
-        videoContainer.appendChild(iframe);
-        terminal.appendChild(videoContainer);
-
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.body.appendChild(tag);
-
-        window.onYouTubeIframeAPIReady = function() {
-          player = new YT.Player('player', {
-            height: '360',
-            width: '100%',
-            videoId: 'dQw4w9WgXcQ',
-            playerVars: { 'autoplay': 1, 'controls': 1 },
-            events: {
-              'onStateChange': onPlayerStateChange
-            }
-          });
-        };
-        return;
-      }
-
-      if (key === "projects" && typeof projectList !== "undefined") {
-        appendLine("Progetti disponibili:", false);
-        projectList.forEach(p => {
-          const line = document.createElement('div');
-          line.classList.add('input-line');
-          line.innerHTML = `<strong>${p.name}</strong> - <a href="${p.info}" target="_blank">Info</a> | <a href="${p.zip}" target="_blank">Download</a>`;
-          terminal.appendChild(line);
-        });
-        appendInfoPrompt();
-      } else {
-        const data = siteContent[key] || "Comando non riconosciuto. Digita 'help' per lista.";
-        data.split('\n').forEach(line => {
-          const out = document.createElement('div');
-          out.classList.add('input-line');
-          out.innerHTML = line;
-          terminal.appendChild(out);
-        });
-        if (['help', 'about', 'contacts'].includes(key)) appendInfoPrompt();
-      }
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.ENDED) {
-        terminal.classList.remove('rainbow');
-        const videoDiv = document.getElementById('video-container');
-        if (videoDiv) videoDiv.remove();
-        appendInfoPrompt();
-        promptInput();
-      }
+      const data = siteContent[key] || "Comando non riconosciuto. Digita 'help' per lista.";
+      data.split('\n').forEach(line => {
+        const out = document.createElement('div');
+        out.classList.add('input-line');
+        out.innerHTML = line;
+        terminal.appendChild(out);
+      });
+      if (['help', 'about', 'contacts'].includes(key)) appendInfoPrompt();
     }
 
     function appendInfoPrompt() {
