@@ -97,18 +97,25 @@
       window.location.href = "https://kekkotech.com/mobile";
     }
   </script>
-  <script src="/js/content.js"></script>
+  <script src="/js/content.js" defer></script>
   <script src="https://downloads.kekkotech.com/js/list.js" defer></script>
   <script src="https://gaming.kekkotech.com/reviews.js" defer></script>
 </head>
 <body>
-  <div class="terminal" id="terminal"></div>
+  <div class="terminal" id="terminal">Caricamento...</div>
   <div style="text-align:center">
     <button class="gaming-btn" onclick="toggleGamingMode()">Gaming Mode</button>
   </div>
   <script>
     const terminal = document.getElementById('terminal');
-    const isGaming = false;
+
+    function safeLoadContent() {
+      if (typeof siteContent !== 'undefined') {
+        terminal.innerHTML = siteContent.homedesktop.replace(/\n/g, '<br>');
+      } else {
+        terminal.innerHTML = 'Errore: contenuto non disponibile.';
+      }
+    }
 
     function toggleGamingMode() {
       terminal.classList.toggle('gaming-mode');
@@ -123,13 +130,18 @@
           terminal.innerHTML = 'Modalità Gaming attiva. Caricamento recensioni...';
         }
       } else {
-        terminal.innerHTML = siteContent.homedesktop.replace(/\n/g, '<br>');
+        safeLoadContent();
       }
     }
 
-    // Inizializzazione contenuto normale
     document.addEventListener('DOMContentLoaded', () => {
-      terminal.innerHTML = siteContent.homedesktop.replace(/\n/g, '<br>');
+      const interval = setInterval(() => {
+        if (typeof siteContent !== 'undefined') {
+          clearInterval(interval);
+          safeLoadContent();
+        }
+      }, 100);
+      setTimeout(() => clearInterval(interval), 5000);
     });
   </script>
 </body>
