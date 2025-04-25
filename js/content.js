@@ -7,7 +7,7 @@ const siteContent = {
   projects   : Visualizza e scarica i progetti realizzati.
   contacts   : Mostra le informazioni di contatto.
   rickroll   : ???
-  review     : Guarda le recensioni dei giochi.
+  reviews     : Guarda le recensioni dei giochi.
   lavachicken: ????
   ---------------------------------`,
 
