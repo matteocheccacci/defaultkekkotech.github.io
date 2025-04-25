@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home | Kekkotech</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #000;
+      color: #0f0; /* Default text color */
+      font-family: Consolas, monospace;
+      font-size: 16px;
+    }
+    .terminal {
+      max-width: 800px;
+      margin: auto;
+      border: 1px solid #0f0; /* Default border color */
+      padding: 20px;
+      box-shadow: 0 0 10px #0f0; /* Default shadow */
+      transition: border-color 0.5s ease, box-shadow 0.5s ease, color 0.5s ease; /* Smooth transitions */
+    }
+
+    /* Rainbow Animation */
+    @keyframes rainbow-border { /* ... (no changes needed here) ... */ }
+    @keyframes rainbow-shadow { /* ... (no changes needed here) ... */ }
+    .rainbow {
+      animation: rainbow-border 2s linear infinite, rainbow-shadow 2s linear infinite;
+    }
+
+    /* Gaming Mode Styles */
+    .gaming-mode {
+        border-color: red;
+        color: red; /* Change text color for the whole terminal */
+        box-shadow: 0 0 10px red;
+    }
+    .gaming-mode .input-line::before,
+    .gaming-mode input,
+    .gaming-mode a {
+        color: red !important; /* Ensure prompt, input, and links are red */
+    }
+    .gaming-mode .typed {
+        border-right-color: red !important; /* Make caret red */
+         animation-name: blink-caret-red !important; /* Use red caret animation */
+    }
+    .gaming-mode a:hover {
+         /* Optional: slightly different red/underline on hover */
+         text-decoration: underline;
+    }
+
+    /* Input line styling */
+    .input-line::before {
+      content: "$ ";
+      color: #0f0; /* Default prompt color */
+    }
+    .input-line { /* Added for general line styling */
+       white-space: pre-wrap; /* Allow wrapping */
+       word-wrap: break-word; /* Break long words */
+    }
+
+    /* Typing animation */
+    .typed {
+      white-space: pre;
+      overflow: hidden;
+      border-right: .15em solid #0f0; /* Default caret color */
+      animation: blink-caret 0.75s step-end infinite;
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #0f0; }
+    }
+    /* Red caret animation for gaming mode */
+     @keyframes blink-caret-red {
+        from, to { border-color: transparent }
+        50% { border-color: red; }
+    }
+
+    /* Link styling */
+    a {
+      color: #0ff; /* Default link color */
+      text-decoration: none;
+      cursor: pointer;
+    }
+    a:hover { text-decoration: underline; }
+
+  </style>
+  <script>
+    // Mobile redirect (no changes needed)
+    if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = "https://kekkotech.com/mobile";
+    }
+  </script>
+  <script src="/js/content.js"></script>
+  <script src="https://downloads.kekkotech.com/js/list.js" defer></script>
+  <script src="https://gaming.kekkotech.com/reviews.js" defer></script>
+  </head>
+<body>
+  <div class="terminal" id="terminal"></div>
+
+  <script>
+    let player;
+    const terminal = document.getElementById('terminal');
+    let isInGamingMode = false; // State variable for gaming mode
+
+    function appendLine(text, isOutput = true, html = false) {
+        const line = document.createElement('div');
+        if (!isOutput) { // Command echo or simple message
+            line.classList.add('input-line'); // Reuse class, but won't have '$ ' unless added
+            if (html) {
+                line.innerHTML = text; // Use innerHTML if specified
+            } else {
+                line.textContent = text;
+            }
+        } else { // Output from a command or system message
+            line.classList.add('output-line'); // Maybe a different class if needed later
+             if (html) {
+                line.innerHTML = text; // Use innerHTML if specified
+            } else {
+                line.textContent = text;
+            }
+        }
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight; // Auto-scroll
+        return line;
+    }
+
+    function appendPromptLine(text, isTyped = false) {
+        const line = document.createElement('div');
+        line.classList.add('input-line'); // This one gets the '$ ' prefix via CSS
+        if (isTyped) {
+            line.classList.add('typed');
+            line.textContent = ''; // Start empty for typing
+        } else {
+            // For already completed commands or direct output with '$ '
+            line.textContent = `$ ${text}`;
+        }
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+        return line;
+    }
+
+
+    function typeLines(lines, onComplete) {
+      let i = 0;
+      function nextLine() {
+        if (i < lines.length) {
+          const lineEl = appendPromptLine('', true); // Use new function, start empty, add 'typed'
+          let currentLineText = lines[i];
+          let j = 0;
+          function typeChar() {
+            if (j < currentLineText.length) {
+              // Prepend '$ ' only for the display, not part of the actual typed content
+              lineEl.textContent = `$ ${currentLineText.substring(0, j + 1)}`;
+              j++;
+              setTimeout(typeChar, 30);
+            } else {
+              lineEl.classList.remove('typed'); // Stop blinking caret
+              //appendLine(''); // Add an empty line after typing finishes? Optional.
+              i++;
+              setTimeout(nextLine, 200); // Wait before starting next line
+            }
+          }
+          typeChar();
+        } else {
+          onComplete && onComplete(); // All lines typed
+        }
+      }
+      nextLine();
+    }
+
+    function promptInput() {
+      const inputLine = document.createElement('div');
+      inputLine.classList.add('input-line'); // Gets '$ ' prefix from CSS
+
+      const input = document.createElement('input');
+      Object.assign(input.style, {
+        background: 'transparent', // Make background transparent
+        color: 'inherit', // Inherit color (will be green or red)
+        border: 'none',
+        outline: 'none',
+        font: 'inherit',
+        width: 'calc(100% - 2ch)' // Adjust width to account for '$ '
+      });
+      input.autofocus = true;
+
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          const cmd = input.value.trim().toLowerCase();
+          input.disabled = true;
+          // Display the entered command properly with the '$ ' prefix
+          inputLine.textContent = `$ ${input.value}`; // Replace input with its value
+          handleCommand(cmd);
+        }
+      });
+
+      // Clear the container, add the input
+      inputLine.textContent = ''; // Clear potential '$ ' text content
+      inputLine.appendChild(input); // Add the actual input field
+      terminal.appendChild(inputLine);
+      input.focus();
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function handleCommand(cmd) {
+        // Echo command only if it's not cls or handled specially before prompt
+        // Most commands are echoed *before* processing now in promptInput's Enter handler.
+
+        if (isInGamingMode) {
+            handleGamingCommand(cmd);
+        } else {
+            handleMainCommand(cmd);
+        }
+    }
+
+     function handleMainCommand(cmd) {
+        switch (cmd) {
+            case 'cls':
+                isInGamingMode = false; // Ensure reset
+                terminal.classList.remove('rainbow', 'gaming-mode');
+                terminal.innerHTML = '';
+                boot();
+                break;
+            case 'rickroll':
+                showContent('rickroll');
+                // Prompt is handled by onPlayerStateChange or user action
+                break;
+            case 'gaming':
+                enterGamingMode();
+                break;
+            case 'help':
+            case 'about':
+            case 'contacts':
+            case 'projects':
+                showContent(cmd);
+                appendInfoPrompt(); // Show 'cls' hint
+                promptInput();
+                break;
+            default:
+                showContent(cmd); // Handles unknown commands too
+                promptInput();
+                break;
+        }
+    }
+
+    function handleGamingCommand(cmd) {
+        switch (cmd) {
+            case 'reviews':
+                displayReviews();
+                promptInput();
+                break;
+            case 'help':
+                displayGamingHelp();
+                promptInput();
+                break;
+            case 'home':
+                exitGamingMode();
+                break;
+            case 'cls':
+                // Exit gaming mode and clear screen
+                exitGamingMode(true); // Pass true to indicate cls triggered exit
+                break;
+            default:
+                appendLine(`Comando '${cmd}' non riconosciuto in modalità Gaming. Usa 'help'.`, true);
+                promptInput();
+                break;
+        }
+    }
+
+    function enterGamingMode() {
+        isInGamingMode = true;
+        terminal.classList.remove('rainbow'); // Ensure rainbow is off
+        terminal.classList.add('gaming-mode'); // Apply red style
+        appendLine("Entrato in modalità Gaming.", true);
+        displayGamingHelp(); // Show available commands immediately
+        promptInput();
+    }
+
+    function exitGamingMode(clearScreen = false) {
+        isInGamingMode = false;
+        terminal.classList.remove('gaming-mode');
+        if (clearScreen) {
+            terminal.innerHTML = '';
+            boot(); // Restart main boot sequence
+        } else {
+            appendLine("Uscita dalla modalità Gaming.", true);
+            appendInfoPrompt(); // Add the standard info prompt
+            promptInput(); // Prompt for a command in the main mode
+        }
+    }
+
+     function displayReviews() {
+        // Check if reviewList exists and is an array
+        if (typeof reviewList !== "undefined" && Array.isArray(reviewList)) {
+             if (reviewList.length === 0) {
+                 appendLine("Nessuna recensione trovata.", true);
+                 return;
+             }
+            appendLine("--- Elenco Recensioni Giochi ---", true);
+            reviewList.forEach(review => {
+                // Using simple text concatenation for display
+                appendLine(` ${review.name}: ${review.description}`, true);
+            });
+            appendLine("-----------------------------", true);
+        } else {
+            appendLine("Errore: Impossibile caricare l'elenco delle recensioni.", true);
+            appendLine("Verifica che 'https://gaming.kekkotech.com/reviews.js' sia accessibile.", true);
+        }
+    }
+
+    function displayGamingHelp() {
+        const helpText = `--- Comandi Gaming ---
+  reviews : Mostra elenco recensioni giochi.
+  help    : Mostra questo aiuto.
+  home    : Torna alla modalità principale.
+  cls     : Pulisce lo schermo e torna alla modalità principale.
+--------------------`;
+        helpText.split('\n').forEach(line => {
+            // Use appendLine with isOutput=true for consistent formatting
+            appendLine(line, true);
+        });
+    }
+
+
+    function showContent(key) {
+      if (key === "rickroll") {
+        appendLine("You got rickrolled 🎵 Never gonna give you up...", true);
+        terminal.classList.add('rainbow'); // Add rainbow effect
+
+        // Remove potential gaming mode style during rickroll
+        terminal.classList.remove('gaming-mode');
+
+        const videoContainer = document.createElement('div');
+        videoContainer.id = 'video-container';
+        // videoContainer.classList.add('input-line'); // Maybe not needed?
+
+        const iframe = document.createElement('div');
+        iframe.id = 'player';
+        videoContainer.appendChild(iframe);
+        terminal.appendChild(videoContainer);
+
+        // Load YouTube API only when needed
+        if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api"; // Use official source
+            document.body.appendChild(tag);
+
+             // Define the callback globally or ensure it's defined before API loads
+            window.onYouTubeIframeAPIReady = function() {
+                loadVideo();
+            };
+        } else {
+             // If API is already loaded
+            loadVideo();
+        }
+        return; // Don't prompt until video ends or interaction
+      }
+
+      if (key === "projects" && typeof projectList !== "undefined" && Array.isArray(projectList)) {
+          appendLine("--- Progetti Disponibili ---", true);
+          if (projectList.length === 0) {
+              appendLine("Nessun progetto trovato.", true);
+          } else {
+              projectList.forEach(p => {
+                  const line = document.createElement('div');
+                  // Use appendLine for consistency, pass true for html content
+                  appendLine(`<strong>${p.name}</strong> - <a href="${p.info}" target="_blank">Info</a> | <a href="${p.zip}" target="_blank">Download</a>`, true, true);
+              });
+          }
+           appendLine("--------------------------", true);
+
+      } else {
+        // Use siteContent from content.js
+        const data = siteContent[key] || `Comando '${key}' non riconosciuto. Digita 'help' per lista.`;
+        data.split('\n').forEach(line => {
+            // Use appendLine, pass true for html content as content.js might contain links
+             appendLine(line, true, true);
+        });
+      }
+    }
+
+    // Function to load the YT Player
+    function loadVideo() {
+        player = new YT.Player('player', {
+            height: '360',
+            width: '100%', // Make responsive
+            videoId: 'dQw4w9WgXcQ',
+            playerVars: { 'autoplay': 1, 'controls': 1, 'modestbranding': 1 },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        terminal.classList.remove('rainbow'); // Remove rainbow effect
+        // Re-apply gaming mode if it was active before rickroll? Or just return to normal?
+        // Safest is to return to normal state unless explicitly handled.
+        // If isInGamingMode was true before, the next command will re-evaluate.
+        const videoDiv = document.getElementById('video-container');
+        if (videoDiv) videoDiv.remove();
+        appendInfoPrompt();
+        promptInput(); // Prompt for next command after video ends
+      }
+    }
+
+    function appendInfoPrompt() {
+      const info = document.createElement('div');
+      // info.classList.add('input-line'); // No need for '$' prefix here
+      info.innerHTML = "<br>(Digita 'cls' per pulire lo schermo)";
+      terminal.appendChild(info);
+    }
+
+    function boot() {
+      // Ensure clean state on boot
+      isInGamingMode = false;
+      terminal.classList.remove('rainbow', 'gaming-mode');
+
+      const lines = siteContent.cls.split('\n'); // 'cls' content is the boot message now
+      // Use appendLine directly for boot message, no typing effect needed here
+      lines.forEach(line => appendLine(line, true));
+      promptInput(); // Directly prompt after boot message
+    }
+
+    // Start the application
+    boot();
+
+  </script>
+</body>
+</html>
