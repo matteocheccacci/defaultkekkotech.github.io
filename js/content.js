@@ -12,8 +12,7 @@ Digita 'help' per iniziare ad esplorare`,
   homemobile: `Benvenuto su kekkotech.com!
 Tocca un comando per esplorare.`,
 
-  about: `Questo sito è progettato per sembrare un terminale, ma con pulsanti cliccabili per una navigazione immediata su dispositivi mobili.
-Lo stile minimal e il font Consolas riflettono la mia passione per la programmazione.`,
+  about: `Questo sito è progettato per sembrare un terminale, ma con pulsanti cliccabili per una navigazione immediata su dispositivi mobili.`,
 
   projects: `Progetti scaricabili:
 - Progetto 1: <a href='https://downloads.kekkotech.com/projects/progetto1/progetto1.html' target='_blank'>Vai a Progetto1</a>
