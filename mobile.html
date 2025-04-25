@@ -51,8 +51,6 @@
     .content a:hover {
       text-decoration: underline;
     }
-
-    /* Effetto arcobaleno */
     @keyframes rainbow-border {
       0% { border-color: red; }
       16% { border-color: orange; }
@@ -74,9 +72,13 @@
     .rainbow {
       animation: rainbow-border 2s linear infinite, rainbow-shadow 2s linear infinite;
     }
+    .steve {
+      margin-top: 20px;
+      width: 80%;
+      max-width: 300px;
+    }
   </style>
   <script>
-    // Redirect desktop
     if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/";
     }
@@ -99,6 +101,7 @@
     const contentDiv = document.getElementById('content');
     const terminal = document.querySelector('.terminal');
     let aboutClickCount = 0;
+    let gamingClickCount = 0;
 
     function resetTerminalStyle() {
       terminal.style.borderColor = '#0f0';
@@ -192,7 +195,15 @@
       };
     }
 
-    // Mostra contenuto iniziale
+    function triggerSteveEasterEgg() {
+      contentDiv.innerHTML = 'la la la lava chi chi chi chicken 🐔<br><br>';
+      const img = document.createElement('img');
+      img.src = 'img/steve.gif';
+      img.alt = 'Steve gif';
+      img.className = 'steve';
+      contentDiv.appendChild(img);
+    }
+
     contentDiv.innerHTML = siteContent.homemobile.replace(/\n/g, '<br>');
 
     document.querySelectorAll('.menu a[data-section]').forEach(link => {
@@ -208,6 +219,17 @@
           }
         } else {
           aboutClickCount = 0;
+        }
+
+        if (sec === 'gaming') {
+          gamingClickCount++;
+          if (gamingClickCount === 3) {
+            triggerSteveEasterEgg();
+            gamingClickCount = 0;
+            return;
+          }
+        } else {
+          gamingClickCount = 0;
         }
 
         if (sec === 'projects') {
