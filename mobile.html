@@ -89,6 +89,7 @@
     <div class="menu">
       <a href="#" data-section="about">About</a>
       <a href="#" data-section="projects">Projects</a>
+      <a href="#" data-section="gaming">Gaming</a>
       <a href="#" data-section="contacts">Contacts</a>
     </div>
     <div class="content" id="content"></div>
@@ -98,6 +99,12 @@
     const contentDiv = document.getElementById('content');
     const terminal = document.querySelector('.terminal');
     let aboutClickCount = 0;
+
+    function resetTerminalStyle() {
+      terminal.style.borderColor = '#0f0';
+      terminal.style.boxShadow = '0 0 8px #0f0';
+      contentDiv.style.color = '#0f0';
+    }
 
     function showProjects() {
       if (typeof projectList === 'undefined') {
@@ -118,6 +125,40 @@
         );
       });
       contentDiv.innerHTML = html.join('');
+    }
+
+    function showGamingReviews() {
+      fetch('https://gaming.kekkotech.com/reviews.js')
+        .then(res => res.text())
+        .then(jsText => {
+          const script = document.createElement('script');
+          script.textContent = jsText;
+          document.body.appendChild(script);
+
+          setTimeout(() => {
+            if (typeof reviews === 'undefined') {
+              contentDiv.innerHTML = "Errore: recensioni non disponibili.";
+              return;
+            }
+
+            terminal.style.borderColor = 'red';
+            terminal.style.boxShadow = '0 0 8px red';
+            contentDiv.style.color = 'red';
+
+            const html = ['<strong>Recensioni videoludiche:</strong><br><br>'];
+            reviews.forEach(r => {
+              html.push(
+                `<strong>${r.title}</strong><br>` +
+                `<a href="https://gaming.kekkotech.com/${r.link}" target="_blank">Leggi la recensione</a><br><br>`
+              );
+            });
+            contentDiv.innerHTML = html.join('');
+          }, 100);
+        })
+        .catch(err => {
+          console.error(err);
+          contentDiv.innerHTML = "Errore nel caricamento delle recensioni.";
+        });
     }
 
     function triggerRickroll() {
@@ -141,6 +182,7 @@
             'onStateChange': function (event) {
               if (event.data === YT.PlayerState.ENDED) {
                 terminal.classList.remove('rainbow');
+                resetTerminalStyle();
                 contentDiv.innerHTML = siteContent.homemobile.replace(/\n/g, '<br>');
                 aboutClickCount = 0;
               }
@@ -169,10 +211,15 @@
         }
 
         if (sec === 'projects') {
+          resetTerminalStyle();
           showProjects();
+        } else if (sec === 'gaming') {
+          showGamingReviews();
         } else if (siteContent[sec]) {
+          resetTerminalStyle();
           contentDiv.innerHTML = siteContent[sec].replace(/\n/g, '<br>');
         } else {
+          resetTerminalStyle();
           contentDiv.innerHTML = `Sezione "${sec}" non trovata.`;
         }
       });
