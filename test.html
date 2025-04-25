@@ -76,7 +76,7 @@
   </script>
   <script src="/js/content.js"></script>
   <script src="https://downloads.kekkotech.com/js/list.js"></script>
-  <script src="https://gaming.kekkotech.com/review.js"></script>
+  <script src="https://gaming.kekkotech.com/reviews.js"></script> <!-- Modifica qui -->
 </head>
 <body>
   <div class="terminal" id="terminal"></div>
@@ -164,8 +164,8 @@
       if (cmd === 'review') {
         terminal.classList.add('redmode');
         appendLine("Recensioni gaming:", false);
-        if (typeof reviewList !== "undefined") {
-          reviewList.forEach(r => {
+        if (typeof reviewsList !== "undefined") {  // Modifica qui
+          reviewsList.forEach(r => {
             const line = document.createElement('div');
             line.classList.add('input-line');
             line.innerHTML = `<strong>${r.title}</strong> - <a href="${r.url}" target="_blank">Leggi</a>`;
