@@ -77,21 +77,66 @@
     }
     a:hover { text-decoration: underline; }
 
+    .gaming-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: 1px solid #0f0;
+      color: #0f0;
+      background-color: #000;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+    }
+    .gaming-btn:hover {
+      background-color: #003300;
+    }
   </style>
   <script>
     if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "https://kekkotech.com/mobile";
     }
   </script>
-  <script src="/js/content.js"></script>
+  <script src="/js/content.js" defer></script>
   <script src="https://downloads.kekkotech.com/js/list.js" defer></script>
   <script src="https://gaming.kekkotech.com/reviews.js" defer></script>
-  </head>
+</head>
 <body>
   <div class="terminal" id="terminal"></div>
-
+  <div style="text-align:center">
+    <button class="gaming-btn" onclick="toggleGamingMode()">Gaming Mode</button>
+  </div>
   <script>
-    // Script principale incluso nel messaggio precedente
+    const terminal = document.getElementById('terminal');
+
+    function toggleGamingMode() {
+      terminal.classList.toggle('gaming-mode');
+      if (terminal.classList.contains('gaming-mode')) {
+        if (typeof reviewList !== 'undefined' && Array.isArray(reviewList)) {
+          let html = '<strong>Modalità Gaming Attiva</strong><br><br><strong>Recensioni:</strong><br><br>';
+          reviewList.forEach(r => {
+            html += `<strong>${r.title}</strong><br>${r.summary}<br><a href="${r.link}" target="_blank">Leggi</a><br><br>`;
+          });
+          terminal.innerHTML = html;
+        } else {
+          terminal.innerHTML = 'Modalità Gaming attiva. Caricamento recensioni...';
+        }
+      } else {
+        if (typeof siteContent !== 'undefined') {
+          terminal.innerHTML = siteContent.homedesktop.replace(/\n/g, '<br>');
+        } else {
+          terminal.innerHTML = 'Errore: contenuto non disponibile.';
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof siteContent !== 'undefined') {
+        terminal.innerHTML = siteContent.homedesktop.replace(/\n/g, '<br>');
+      } else {
+        terminal.innerHTML = 'Errore: contenuto non disponibile.';
+      }
+    });
   </script>
 </body>
 </html>
