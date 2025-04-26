@@ -12,7 +12,6 @@
       color: #0f0;
       font-family: Consolas, monospace;
       font-size: 16px;
-      transition: background-color 0.3s, color 0.3s; /* Transizione per i cambiamenti di tema */
     }
     .terminal {
       max-width: 800px;
@@ -20,7 +19,6 @@
       border: 1px solid #0f0;
       padding: 20px;
       box-shadow: 0 0 10px #0f0;
-      transition: border-color 0.3s, box-shadow 0.3s; /* Transizione per il bordo */
     }
     .input-line::before {
       content: "$ ";
@@ -42,12 +40,15 @@
       cursor: pointer;
     }
     a:hover { text-decoration: underline; }
-    /* Modalità rossa */
-    .redmode {
-      background-color: #300; /* sfondo rosso scuro */
-      color: #f00;
-    }
   </style>
+  <script>
+    if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = "https://kekkotech.com/mobile";
+    }
+  </script>
+  <script src="/js/content.js"></script>
+  <script src="https://downloads.kekkotech.com/js/list.js"></script>
+  <script src="https://gaming.kekkotech.com/reviews.js"></script>
 </head>
 <body>
   <div class="terminal" id="terminal"></div>
@@ -122,34 +123,21 @@
     }
 
     function handleCommand(cmd) {
-      if (cmd !== 'reviews') {
-        // Ritorna al tema verde per comandi non 'reviews'
-        document.body.style.backgroundColor = '#000'; // Imposta sfondo nero
-        document.body.style.color = '#0f0'; // Imposta testo verde
-        terminal.classList.remove('redmode'); // Rimuovi la classe per il tema rosso
-      }
-
       if (cmd === 'cls') {
-        terminal.classList.remove('rainbow', 'redmode');
+        terminal.classList.remove('rainbow');
         terminal.innerHTML = '';
         boot();
         return;
       }
       if (cmd === 'reviews') {
-        terminal.classList.add('redmode'); // Applica il tema rosso
+        terminal.classList.remove('rainbow');
         appendLine("Recensioni gaming:", false);
         if (typeof reviews !== "undefined" && Array.isArray(reviews)) {
           reviews.forEach(r => {
-            const reviewItem = document.createElement('div');
-            reviewItem.classList.add('input-line');
-            
-            // Solo titolo e link
-            const reviewLink = document.createElement('a');
-            reviewLink.href = r.link;
-            reviewLink.textContent = r.title;
-            reviewItem.appendChild(reviewLink);
-
-            terminal.appendChild(reviewItem);
+            const line = document.createElement('div');
+            line.classList.add('input-line');
+            line.innerHTML = `<strong>${r.title}</strong> - <a href="${r.link}" target="_blank">Leggi</a>`;
+            terminal.appendChild(line);
           });
         } else {
           appendLine("Nessuna recensione trovata.", false);
@@ -158,8 +146,21 @@
         promptInput();
         return;
       }
+      if (cmd === 'rickroll') {
+        showContent('rickroll');
+        return;
+      }
+      if (cmd === 'lavachicken') {
+        appendLine("la la la lava chi chi chi chicken", false);
+        const img = document.createElement('img');
+        img.src = 'img/steve.gif';
+        img.style.maxWidth = '100%';
+        terminal.appendChild(img);
+        appendInfoPrompt();
+        promptInput();
+        return;
+      }
 
-      // Se il comando non è 'reviews', continua come di consueto
       appendLine(cmd, false);
       showContent(cmd);
       promptInput();
@@ -169,16 +170,20 @@
       if (key === "rickroll") {
         appendLine("You got rickrolled 🎵 Never gonna give you up...", false);
         terminal.classList.add('rainbow');
+
         const videoContainer = document.createElement('div');
         videoContainer.classList.add('input-line');
         videoContainer.id = 'video-container';
+
         const iframe = document.createElement('div');
         iframe.id = 'player';
         videoContainer.appendChild(iframe);
         terminal.appendChild(videoContainer);
+
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         document.body.appendChild(tag);
+
         window.onYouTubeIframeAPIReady = function() {
           player = new YT.Player('player', {
             height: '360',
