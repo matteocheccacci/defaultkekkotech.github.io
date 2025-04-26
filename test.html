@@ -40,6 +40,13 @@
       cursor: pointer;
     }
     a:hover { text-decoration: underline; }
+
+    .redmode {
+      background-color: #300;
+      color: #f00;
+      box-shadow: 0 0 10px #f00;
+      border: 1px solid #f00;
+    }
   </style>
   <script>
     if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
@@ -52,6 +59,7 @@
 </head>
 <body>
   <div class="terminal" id="terminal"></div>
+
   <script>
     let player;
     const terminal = document.getElementById('terminal');
@@ -123,12 +131,7 @@
     }
 
     function handleCommand(cmd) {
-      if (cmd === 'cls') {
-        terminal.classList.remove('rainbow', 'redmode');
-        terminal.innerHTML = '';
-        boot();
-        return;
-      }
+      terminal.classList.remove('rainbow', 'redmode'); // Ripulisce tutto subito
       appendLine(cmd, false);
       showContent(cmd);
       promptInput();
@@ -175,6 +178,7 @@
         appendInfoPrompt();
       }
       else if (key === "reviews" && typeof reviews !== "undefined") {
+        terminal.classList.add('redmode');
         appendLine("Recensioni disponibili:", false);
         reviews.forEach(r => {
           const line = document.createElement('div');
