@@ -42,37 +42,12 @@
       cursor: pointer;
     }
     a:hover { text-decoration: underline; }
-    .review-item {
-      margin: 20px 0;
-      padding: 10px;
-      background-color: #111;
-      border-radius: 5px;
-    }
-    .review-item img {
-      max-width: 100%;
-      border-radius: 5px;
-    }
-    .review-item h3 {
-      margin: 0;
-      color: #fff;
-    }
-    .review-item p {
-      color: #bbb;
-    }
     /* Modalità rossa */
     .redmode {
       background-color: #300; /* sfondo rosso scuro */
       color: #f00;
     }
   </style>
-  <script>
-    if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      window.location.href = "https://kekkotech.com/mobile";
-    }
-  </script>
-  <script src="/js/content.js"></script>
-  <script src="https://downloads.kekkotech.com/js/list.js"></script>
-  <script src="https://gaming.kekkotech.com/reviews.js"></script>
 </head>
 <body>
   <div class="terminal" id="terminal"></div>
@@ -148,9 +123,10 @@
 
     function handleCommand(cmd) {
       if (cmd !== 'reviews') {
-        terminal.classList.remove('redmode'); // Ritorna al tema verde per altri comandi
+        // Ritorna al tema verde per comandi non 'reviews'
         document.body.style.backgroundColor = '#000'; // Imposta sfondo nero
         document.body.style.color = '#0f0'; // Imposta testo verde
+        terminal.classList.remove('redmode'); // Rimuovi la classe per il tema rosso
       }
 
       if (cmd === 'cls') {
@@ -165,25 +141,13 @@
         if (typeof reviews !== "undefined" && Array.isArray(reviews)) {
           reviews.forEach(r => {
             const reviewItem = document.createElement('div');
-            reviewItem.classList.add('review-item');
+            reviewItem.classList.add('input-line');
             
-            const img = document.createElement('img');
-            img.src = r.backgroundImage;
-            reviewItem.appendChild(img);
-            
-            const title = document.createElement('h3');
-            title.textContent = r.title;
-            reviewItem.appendChild(title);
-
-            const excerpt = document.createElement('p');
-            excerpt.textContent = r.excerpt;
-            reviewItem.appendChild(excerpt);
-
-            const link = document.createElement('a');
-            link.href = r.link;
-            link.target = "_blank";
-            link.textContent = "Leggi la recensione completa";
-            reviewItem.appendChild(link);
+            // Solo titolo e link
+            const reviewLink = document.createElement('a');
+            reviewLink.href = r.link;
+            reviewLink.textContent = r.title;
+            reviewItem.appendChild(reviewLink);
 
             terminal.appendChild(reviewItem);
           });
