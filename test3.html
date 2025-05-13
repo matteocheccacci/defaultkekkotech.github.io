@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snapshot | Kekkotech</title>
-  <link rel="icon" href="/img/favicon.png" type="image/png" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
   <style>
     body {
       margin: 0;
@@ -168,13 +168,13 @@
       const input = document.createElement('input');
       Object.assign(input.style, {
         background: 'black',
-        color: '#555', // Inizialmente testo grigio per indicare che è disabilitato
+        color: '#0f0', // Imposta il colore corretto all'inizio ora
         border: 'none',
         outline: 'none',
         font: 'inherit'
       });
-      input.disabled = true; // Disabilita l'input all'inizio
-      input.autofocus = false; // Evita che riceva il focus immediatamente
+      input.disabled = false; // Abilita l'input ogni volta che viene chiamato promptInput
+      input.autofocus = true; // Imposta l'autofocus ogni volta
       input.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
           const cmd = input.value.trim().toLowerCase();
@@ -185,9 +185,9 @@
       });
       inputLine.textContent = '';
       inputLine.append(span, input);
-      // Non mettiamo subito il focus qui
+      input.focus();
       terminal.scrollTop = terminal.scrollHeight;
-      return input; // Restituiamo l'elemento input per poterlo abilitare in seguito
+      return input; // Restituiamo l'elemento input (anche se ora lo abilitiamo subito)
     }
 
     function handleCommand(cmd) {
@@ -227,7 +227,7 @@
         return;
       } else if (key === "cls") {
         terminal.innerHTML = ''; // Svuota l'intero contenuto del terminale
-        boot(); // Riavvia la sequenza di boot (se lo desideri) oppure puoi ometterlo se vuoi uno schermo vuoto
+        boot(); // Riavvia la sequenza di boot
         return;
       }
 
@@ -283,12 +283,7 @@
 
     function boot() {
       const lines = siteContent.cls.split('\n');
-      typeLines(lines, () => { // Passiamo una funzione di callback a typeLines
-        const inputElement = promptInput(); // Otteniamo l'elemento input
-        inputElement.disabled = false; // Abilitiamo l'input al termine dell'animazione
-        inputElement.style.color = '#0f0'; // Ripristiniamo il colore del testo
-        inputElement.focus(); // Impostiamo il focus sull'input ora
-      });
+      typeLines(lines, promptInput); // Chiama promptInput al termine del boot
     }
 
     boot();
