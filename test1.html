@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snapshot | Kekkotech</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/img/favicon.png" type="image/png" />
   <style>
     body {
       margin: 0;
@@ -33,7 +33,32 @@
     }
     @keyframes blink-caret {
       from, to { border-color: transparent }
-      50% { border-color: #0f0; }
+      50% { border-color: #0f0; } /* Manteniamo il verde di default per l'animazione */
+    }
+    .typed::selection {
+      background-color: #0f0; /* Colore di selezione di default */
+      color: #000;
+    }
+    .redmode-terminal {
+      border: 1px solid #f00 !important;
+      box-shadow: 0 0 10px #f00 !important;
+      color: #f00 !important;
+    }
+    .redmode-terminal .input-line::before {
+      color: #f00 !important;
+    }
+    .redmode-terminal a {
+      color: #ff0 !important; /* Un giallo/arancio per i link in modalità rossa */
+    }
+    .redmode-terminal .typed {
+      border-right: .15em solid #f00 !important;
+    }
+    .redmode-terminal .typed::selection {
+      background-color: #f00; /* Colore di selezione in modalità rossa */
+      color: #000;
+    }
+    .redmode-terminal input {
+      color: #f00 !important;
     }
     a {
       color: #0ff;
@@ -41,13 +66,12 @@
       cursor: pointer;
     }
     a:hover { text-decoration: underline; }
-
-    .redmode {
-      background-color: #300;
-      color: #f00;
-      box-shadow: none; /* Ho rimosso la box-shadow qui per un effetto più sobrio */
-      border: none; /* Ho rimosso il bordo qui per un effetto più sobrio */
-      padding: 2px 5px; /* Aggiunto un po' di padding per far respirare il testo rosso */
+    input {
+      background: black;
+      color: #0f0;
+      border: none;
+      outline: none;
+      font: inherit;
     }
   </style>
   <script>
@@ -133,7 +157,7 @@
     }
 
     function handleCommand(cmd) {
-      terminal.classList.remove('rainbow'); // Ripulisce rainbow subito
+      terminal.classList.remove('rainbow', 'redmode-terminal'); // Ripulisce tutte le classi di stile speciali
       appendLine(cmd, false);
       showContent(cmd);
       promptInput();
@@ -180,10 +204,11 @@
         appendInfoPrompt();
       }
       else if (key === "reviews" && typeof reviews !== "undefined") {
+        terminal.classList.add('redmode-terminal'); // Aggiunge la classe al terminale
         appendLine("Recensioni disponibili:", false);
         reviews.forEach(r => {
           const line = document.createElement('div');
-          line.classList.add('input-line', 'redmode');
+          line.classList.add('input-line'); // Mantiene lo stile standard per le righe
           line.innerHTML = `<strong>${r.title}</strong> - <a href="${r.link}" target="_blank">Leggi</a>`;
           terminal.appendChild(line);
         });
@@ -203,7 +228,7 @@
 
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.ENDED) {
-        terminal.classList.remove('rainbow');
+        terminal.classList.remove('rainbow', 'redmode-terminal'); // Pulisce anche qui
         const videoDiv = document.getElementById('video-container');
         if (videoDiv) videoDiv.remove();
         appendInfoPrompt();
