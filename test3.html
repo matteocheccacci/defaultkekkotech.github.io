@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snapshot | Kekkotech</title>
-  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="icon" href="/img/favicon.png" type="image/png" />
   <style>
     body {
       margin: 0;
@@ -168,12 +168,13 @@
       const input = document.createElement('input');
       Object.assign(input.style, {
         background: 'black',
-        color: '#0f0',
+        color: '#555', // Inizialmente testo grigio per indicare che è disabilitato
         border: 'none',
         outline: 'none',
         font: 'inherit'
       });
-      input.autofocus = true;
+      input.disabled = true; // Disabilita l'input all'inizio
+      input.autofocus = false; // Evita che riceva il focus immediatamente
       input.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
           const cmd = input.value.trim().toLowerCase();
@@ -184,8 +185,9 @@
       });
       inputLine.textContent = '';
       inputLine.append(span, input);
-      input.focus();
+      // Non mettiamo subito il focus qui
       terminal.scrollTop = terminal.scrollHeight;
+      return input; // Restituiamo l'elemento input per poterlo abilitare in seguito
     }
 
     function handleCommand(cmd) {
@@ -281,7 +283,12 @@
 
     function boot() {
       const lines = siteContent.cls.split('\n');
-      typeLines(lines, promptInput);
+      typeLines(lines, () => { // Passiamo una funzione di callback a typeLines
+        const inputElement = promptInput(); // Otteniamo l'elemento input
+        inputElement.disabled = false; // Abilitiamo l'input al termine dell'animazione
+        inputElement.style.color = '#0f0'; // Ripristiniamo il colore del testo
+        inputElement.focus(); // Impostiamo il focus sull'input ora
+      });
     }
 
     boot();
