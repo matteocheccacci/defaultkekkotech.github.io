@@ -3,42 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kekkotech</title>
+    <title>KekkOS</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div id="loader">
         <div class="loader-content">
-            <pre>
-                /////////////////////////////////////////////////
-                //                                             //
-                //   K  E  K  K  O  T  E  C  H  .  C  O  M     //
-                //                                             //
-                /////////////////////////////////////////////////
-            </pre>
-            <p>Inizializzazione sessione...</p>
-            <p>Connessione da: <span id="ip-address">ricerca...</span></p>
-            <p>Data e ora: <span id="date-time">ricerca...</span></p>
-            <p>Ultimo accesso: <span id="last-visit">mai</span></p>
-            <br>
-            <p>Caricamento completato.</p>
-        </div>
+            </div>
     </div>
 
-    <div id="terminal" class="hidden">
+    <div id="terminal" style="display: none;">
         <div id="terminal-header">
             <div class="terminal-buttons">
                 <span class="terminal-button close"></span>
                 <span class="terminal-button minimize"></span>
                 <span class="terminal-button maximize"></span>
             </div>
-            <div class="terminal-title">kekkotech</div>
+            <div class="terminal-title">KekkOS</div>
         </div>
         <div id="terminal-body">
             <div id="output"></div>
             <div class="input-line">
-                <span class="prompt">kekkotech@github.io:~$</span>
+                <span id="prompt" class="prompt"></span>
                 <input type="text" id="input" autofocus>
             </div>
         </div>

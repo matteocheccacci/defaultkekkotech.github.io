@@ -1,80 +1,129 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const loader = document.getElementById('loader');
-    const terminal = document.getElementById('terminal');
-    const ipAddressSpan = document.getElementById('ip-address');
-    const dateTimeSpan = document.getElementById('date-time');
-    const lastVisitSpan = document.getElementById('last-visit');
-    const outputDiv = document.getElementById('output');
-    const inputField = document.getElementById('input');
+// --- REDIRECT PER UTENTI MOBILE ---
+(function() {
+    // Espressione regolare per rilevare i dispositivi mobili più comuni
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    // --- Schermata di Caricamento ---
-
-    // 1. Ottieni l'indirizzo IP
-    fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-            ipAddressSpan.textContent = data.ip;
-        })
-        .catch(error => {
-            console.error("Errore nel recupero dell'IP:", error);
-            ipAddressSpan.textContent = 'non disponibile';
-        });
-
-    // 2. Ottieni data e ora del browser
-    const now = new Date();
-    dateTimeSpan.textContent = now.toLocaleString('it-IT');
-
-    // 3. Gestisci l'ultimo accesso con localStorage
-    const lastVisit = localStorage.getItem('lastVisit');
-    if (lastVisit) {
-        lastVisitSpan.textContent = lastVisit;
+    if (isMobile) {
+        // Se rileva un mobile, reindirizza alla pagina mobile.html
+        window.location.href = "mobile.html";
     }
-    localStorage.setItem('lastVisit', now.toLocaleString('it-IT'));
+})();
 
-    // Nascondi il loader e mostra il terminale dopo un ritardo
-    setTimeout(() => {
-        loader.classList.add('hidden');
-        terminal.classList.remove('hidden');
+
+// --- CODICE PER LA VERSIONE DESKTOP ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Riferimenti agli elementi principali
+    const loaderContent = document.querySelector('.loader-content');
+    const terminal = document.getElementById('terminal');
+    const inputField = document.getElementById('input');
+    const outputDiv = document.getElementById('output');
+    const promptSpan = document.getElementById('prompt');
+    const terminalTitle = document.getElementById('terminal-window-title'); 
+
+    // Contenuto da mostrare nel loader, linea per linea
+    const loaderLines = [
+        `<pre>
+        /////////////////////////////////////////////////
+        //                                             //
+        //   K  E  K  K  O  T  E  C  H  .  C  O  M     //
+        //                                             //
+        /////////////////////////////////////////////////
+</pre>`,
+        '<p>Avvio di KekkOS in corso...</p>',
+        '<p>Inizializzazione sessione...</p>',
+        '<p>Connessione da: <span id="ip-address">ricerca...</span></p>',
+        '<p>Data e ora: <span id="date-time">ricerca...</span></p>',
+        '<p>Ultimo accesso: <span id="last-visit">mai</span></p>',
+        '<br>',
+        '<p>Caricamento completato.</p>'
+    ];
+
+    let lineIndex = 0;
+
+    // --- Funzione di caricamento ---
+    function typeLoader() {
+        if (lineIndex < loaderLines.length) {
+            loaderContent.innerHTML += loaderLines[lineIndex];
+
+            // Aggiorna dinamicamente il contenuto
+            if (loaderLines[lineIndex].includes('ip-address')) {
+                fetch('https://api.ipify.org?format=json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const userIdentifier = `${data.ip}@kekkotech.com`;
+                        document.getElementById('ip-address').textContent = data.ip;
+                        
+                        if (promptSpan) promptSpan.textContent = `${userIdentifier}:~$`;
+                        if (terminalTitle) terminalTitle.textContent = userIdentifier;
+                        document.title = userIdentifier;
+                    }).catch(() => {
+                        const userIdentifier = 'guest@kekkotech.com';
+                        document.getElementById('ip-address').textContent = 'non disponibile';
+
+                        if (promptSpan) promptSpan.textContent = `${userIdentifier}:~$`;
+                        if (terminalTitle) terminalTitle.textContent = userIdentifier;
+                        document.title = userIdentifier;
+                    });
+            }
+            if (loaderLines[lineIndex].includes('date-time')) {
+                const now = new Date();
+                document.getElementById('date-time').textContent = now.toLocaleString('it-IT');
+            }
+            if (loaderLines[lineIndex].includes('last-visit')) {
+                const lastVisit = localStorage.getItem('kekkotech_last_visit');
+                document.getElementById('last-visit').textContent = lastVisit || 'mai';
+                // Salva l'ora corrente per la prossima visita
+                localStorage.setItem('kekkotech_last_visit', new Date().toLocaleString('it-IT'));
+            }
+
+            lineIndex++;
+            setTimeout(typeLoader, 400);
+        } else {
+            setTimeout(showTerminal, 1000);
+        }
+    }
+
+    function showTerminal() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'none';
+        terminal.style.display = 'flex';
         inputField.focus();
-        printToTerminal('Benvenuto su kekkotech!');
-        printToTerminal('Digita "aiuto" per la lista dei comandi.');
-    }, 4000); // 4 secondi di ritardo
+        printToTerminal('Benvenuto su kekkotech.com!');
+        printToTerminal('Digita "help" per la lista dei comandi.');
+    }
 
     // --- Logica del Terminale ---
-
     inputField.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             const command = inputField.value.trim().toLowerCase();
-            printToTerminal(`kekkotech@github.io:~$ ${command}`);
-            handleCommand(command);
+            if (command) {
+                printToTerminal(`${promptSpan.textContent} ${command}`);
+                handleCommand(command);
+            }
             inputField.value = '';
         }
     });
 
     function handleCommand(command) {
         switch (command) {
-            case 'aiuto':
+            case 'help':
                 printToTerminal('Comandi disponibili:');
-                printToTerminal('- aiuto: Mostra questa lista.');
-                printToTerminal('- chi-sono: Informazioni su di me.');
-                printToTerminal('- progetti: I miei progetti principali.');
-                printToTerminal('- contatti: Come contattarmi.');
-                printToTerminal('- pulisci: Pulisce la schermata.');
+                printToTerminal('- <span class="cmd">help</span>: Mostra questa lista di comandi.');
+                printToTerminal('- <span class="cmd">aboutme</span>: Informazioni su di me.');
+                printToTerminal('- <span class="cmd">projects</span>: I miei progetti principali.');
+                printToTerminal('- <span class="cmd">contacts</span>: Come contattarmi.');
+                printToTerminal('- <span class="cmd">cls</span>: Pulisce la schermata.');
                 break;
-            case 'chi-sono':
-                printToTerminal('Sono kekkotech, uno sviluppatore appassionato di...');
-                // Aggiungi qui la tua descrizione
+            case 'aboutme':
+                printToTerminal('To be filled'); //sistemare
                 break;
-            case 'progetti':
-                printToTerminal('Ecco alcuni dei miei progetti:');
-                printToTerminal('<a href="https://github.com/tuo-username/progetto1" target="_blank">Progetto 1</a>');
-                printToTerminal('<a href="https://github.com/tuo-username/progetto2" target="_blank">Progetto 2</a>');
+            case 'projects':
+                printToTerminal('To be filled');  //integrare js su downloads.kekkotech.com
                 break;
-            case 'contatti':
-                printToTerminal('Email: tua-email@esempio.com');
-                printToTerminal('GitHub: <a href="https://github.com/tuo-username" target="_blank">tuo-username</a>');
+            case 'contacts':  //integrare js
+                printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>');
                 break;
-            case 'pulisci':
+            case 'cls':
                 outputDiv.innerHTML = '';
                 break;
             default:
@@ -86,6 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const p = document.createElement('p');
         p.innerHTML = message;
         outputDiv.appendChild(p);
-        terminal.scrollTop = terminal.scrollHeight; // Scrolla in fondo
+        terminal.scrollTop = terminal.scrollHeight;
     }
+
+    // Avvia la sequenza di caricamento
+    typeLoader();
 });

@@ -1,0 +1,48 @@
+/* Contenuto di css/mobile.css */
+
+#terminal {
+    /* Adatta il terminale per riempire meglio lo schermo */
+    width: 95%;
+    height: 95vh;
+    margin: 2.5vh auto;
+}
+
+#terminal-body {
+    /* Assicura che i pulsanti stiano in basso */
+    display: flex;
+    flex-direction: column;
+}
+
+#output {
+    /* Fa in modo che l'output occupi tutto lo spazio disponibile */
+    flex-grow: 1;
+}
+
+#command-buttons {
+    /* Stile per l'area dei pulsanti */
+    display: flex;
+    flex-wrap: wrap; /* Permette ai pulsanti di andare a capo */
+    gap: 8px; /* Spazio tra i pulsanti */
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid #0F0; /* Linea di separazione */
+}
+
+.mobile-command {
+    /* Stile per i singoli pulsanti */
+    background-color: #111;
+    border: 1px solid #0F0;
+    color: #0F0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1em;
+    padding: 10px;
+    cursor: pointer;
+    flex-grow: 1; /* Fa sì che i pulsanti si espandano per riempire lo spazio */
+    text-align: center;
+}
+
+/* Effetto al tocco */
+.mobile-command:active {
+    background-color: #0F0;
+    color: #000;
+}
