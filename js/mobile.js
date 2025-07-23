@@ -1,26 +1,26 @@
-// Contenuto di js/mobile.js
-
 document.addEventListener('DOMContentLoaded', function() {
     // Riferimenti agli elementi principali
     const loaderContent = document.querySelector('.loader-content');
     const terminal = document.getElementById('terminal');
     const outputDiv = document.getElementById('output');
-    const promptSpan = document.getElementById('prompt');
     const terminalTitle = document.getElementById('terminal-window-title');
-    const versionDisplay = document.getElementById('version-display');
-    const commandButtons = document.querySelectorAll('.mobile-command'); // Riferimento ai pulsanti
+    const commandButtons = document.querySelectorAll('.mobile-command');
 
-    // La logica di caricamento (versione, IP, data, ecc.) rimane la stessa
-    // (Qui puoi copiare le funzioni loadVersion, typeLoader e showTerminal dal tuo file main.js)
-    // Per semplicità, le riporto qui:
+    // Variabile per conservare l'identificativo dell'utente (IP o guest)
+    let userIdentifier = 'guest@kekkotech.com';
 
-    function loadVersion() {
-        fetch('version.json')
-            .then(response => response.json())
-            .then(data => {
-                if (versionDisplay) versionDisplay.textContent = `v${data.site_version}`;
-            })
-            .catch(() => { if (versionDisplay) versionDisplay.textContent = 'v_error'; });
+    // --- LOGICA PER SIMULARE LA CHIUSURA DEL TERMINALE ---
+    const closeButton = document.querySelector('.terminal-button.close');
+    if (closeButton && terminal) {
+        closeButton.addEventListener('click', function() {
+            terminal.style.display = 'none';
+            const exitMessage = document.createElement('p');
+            exitMessage.style.color = '#0F0';
+            exitMessage.style.textAlign = 'center';
+            exitMessage.style.marginTop = '40px';
+            exitMessage.textContent = '[Sessione terminata]';
+            document.body.appendChild(exitMessage);
+        });
     }
 
     const loaderLines = [
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         //                                             //
         /////////////////////////////////////////////////
 </pre>`,
+        '<p>Avvio di KekkOS Mobile in corso...</p>',
         '<p>Inizializzazione sessione...</p>',
         '<p>Connessione da: <span id="ip-address">ricerca...</span></p>',
         '<p>Data e ora: <span id="date-time">ricerca...</span></p>',
@@ -43,17 +44,37 @@ document.addEventListener('DOMContentLoaded', function() {
     function typeLoader() {
         if (lineIndex < loaderLines.length) {
             loaderContent.innerHTML += loaderLines[lineIndex];
+
             if (loaderLines[lineIndex].includes('ip-address')) {
-                fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => {
-                    const id = `${d.ip}@kekkotech.com`;
-                    document.getElementById('ip-address').textContent = d.ip;
-                    if (promptSpan) promptSpan.textContent = `${id}:~$`;
-                    document.title = id;
-                    if (terminalTitle) terminalTitle.textContent = id;
-                }).catch(() => { /* ...gestione errore... */ });
+                fetch('https://api.ipify.org?format=json')
+                    .then(response => response.json())
+                    //sono state fatte delle modifiche per mostrare un title uguale sempre. rinominare per mostrare ip@kekkotech.com
+                    .then(data => {
+                        ipuserIdentifier = `${data.ip}@kekkotech.com`; // Salva l'identificativo
+                        userIdentifier = `KekkOS Mobile | kekkotech.com`
+                        document.getElementById('ip-address').textContent = data.ip;
+                        document.title = userIdentifier; // Titolo della scheda del browser
+                        if (terminalTitle) terminalTitle.textContent = 'KekkOS Mobile'; // Titolo della finestra del terminale
+                    })
+                    .catch(() => {
+                        // In caso di errore, userIdentifier rimane 'guest@kekkotech.com'
+                        ipuserIdentifier = 'guest@kekkotech.com';
+                        userIdentifier = `KekkOS Mobile | kekkotech.com`
+                        document.getElementById('ip-address').textContent = 'non disponibile';
+                        document.title = userIdentifier;
+                        if (terminalTitle) terminalTitle.textContent = 'KekkOS Mobile';
+                    });
             }
-            if (loaderLines[lineIndex].includes('date-time')) { /* ... */ }
-            if (loaderLines[lineIndex].includes('last-visit')) { /* ... */ }
+            if (loaderLines[lineIndex].includes('date-time')) {
+                const now = new Date();
+                document.getElementById('date-time').textContent = now.toLocaleString('it-IT');
+            }
+            if (loaderLines[lineIndex].includes('last-visit')) {
+                const lastVisit = localStorage.getItem('kekkotech_last_visit');
+                document.getElementById('last-visit').textContent = lastVisit || 'mai';
+                localStorage.setItem('kekkotech_last_visit', new Date().toLocaleString('it-IT'));
+            }
+
             lineIndex++;
             setTimeout(typeLoader, 400);
         } else {
@@ -64,31 +85,20 @@ document.addEventListener('DOMContentLoaded', function() {
     function showTerminal() {
         document.getElementById('loader').style.display = 'none';
         terminal.style.display = 'flex';
-        // Non c'è un input field su cui fare focus
+        printToTerminal('Benvenuto su kekkotech.com!')
     }
 
-    // CAMBIAMENTO: Logica per i pulsanti al posto dell'input
     commandButtons.forEach(button => {
         button.addEventListener('click', function() {
             const command = this.dataset.command;
-            // Mostra un prompt fittizio per coerenza
-            const fakePrompt = promptSpan ? promptSpan.textContent : 'guest@kekkotech.com:~$';
-            printToTerminal(`${fakePrompt} ${command}`);
+            const promptText = `${userIdentifier}:~$`; // Usa l'identificativo salvato
+            printToTerminal(`${promptText} ${command}`);
             handleCommand(command);
         });
     });
 
     function handleCommand(command) {
-        // La funzione handleCommand è identica a quella di main.js
         switch (command) {
-            case 'help':
-                printToTerminal('Comandi disponibili:');
-                printToTerminal('- <span class="cmd">help</span>: Mostra questa lista.');
-                printToTerminal('- <span class="cmd">aboutme</span>: Info su di me.');
-                printToTerminal('- <span class="cmd">projects</span>: I miei progetti.');
-                printToTerminal('- <span class="cmd">contacts</span>: Contattami.');
-                printToTerminal('- <span class="cmd">cls</span>: Pulisce lo schermo.');
-                break;
             case 'aboutme': printToTerminal('To be filled'); break;
             case 'projects': printToTerminal('To be filled'); break;
             case 'contacts': printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>'); break;
@@ -101,10 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const p = document.createElement('p');
         p.innerHTML = message;
         outputDiv.appendChild(p);
-        outputDiv.scrollTop = outputDiv.scrollHeight; // Scrolla in fondo
+        outputDiv.scrollTop = outputDiv.scrollHeight;
     }
 
-    // Avvia tutto
-    loadVersion();
+    // Avvia la sequenza di caricamento
     typeLoader();
 });

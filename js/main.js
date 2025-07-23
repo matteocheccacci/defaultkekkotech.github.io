@@ -18,7 +18,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputField = document.getElementById('input');
     const outputDiv = document.getElementById('output');
     const promptSpan = document.getElementById('prompt');
-    const terminalTitle = document.getElementById('terminal-window-title'); 
+    const terminalTitle = document.getElementById('terminal-window-title');
+
+    // --- LOGICA PER SIMULARE LA CHIUSURA DEL TERMINALE ---
+    const closeButton = document.querySelector('.terminal-button.close');
+    if (closeButton && terminal) {
+        closeButton.addEventListener('click', function() {
+            terminal.style.display = 'none';
+            const exitMessage = document.createElement('p');
+            exitMessage.style.color = '#0F0';
+            exitMessage.style.textAlign = 'center';
+            exitMessage.style.marginTop = '40px';
+            exitMessage.textContent = '[Sessione terminata]';
+            document.body.appendChild(exitMessage);
+        });
+    }
 
     // Contenuto da mostrare nel loader, linea per linea
     const loaderLines = [
@@ -50,19 +64,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch('https://api.ipify.org?format=json')
                     .then(response => response.json())
                     .then(data => {
-                        const userIdentifier = `${data.ip}@kekkotech.com`;
+                        ipuserIdentifier = `${data.ip}@kekkotech.com`;
+                        userIdentifier = 'KekkOS | kekkotech.com'
                         document.getElementById('ip-address').textContent = data.ip;
-                        
                         if (promptSpan) promptSpan.textContent = `${userIdentifier}:~$`;
-                        if (terminalTitle) terminalTitle.textContent = userIdentifier;
                         document.title = userIdentifier;
+                        if (terminalTitle) terminalTitle.textContent = 'KekkOS';
                     }).catch(() => {
-                        const userIdentifier = 'guest@kekkotech.com';
+                        ipuserIdentifier = 'guest@kekkotech.com';
+                        userIdentifier = "KekkOS | kekkotech.com"
                         document.getElementById('ip-address').textContent = 'non disponibile';
-
                         if (promptSpan) promptSpan.textContent = `${userIdentifier}:~$`;
-                        if (terminalTitle) terminalTitle.textContent = userIdentifier;
                         document.title = userIdentifier;
+                        if (terminalTitle) terminalTitle.textContent = 'KekkOS';
                     });
             }
             if (loaderLines[lineIndex].includes('date-time')) {
@@ -72,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (loaderLines[lineIndex].includes('last-visit')) {
                 const lastVisit = localStorage.getItem('kekkotech_last_visit');
                 document.getElementById('last-visit').textContent = lastVisit || 'mai';
-                // Salva l'ora corrente per la prossima visita
                 localStorage.setItem('kekkotech_last_visit', new Date().toLocaleString('it-IT'));
             }
 
@@ -115,12 +128,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 printToTerminal('- <span class="cmd">cls</span>: Pulisce la schermata.');
                 break;
             case 'aboutme':
-                printToTerminal('To be filled'); //sistemare
+                printToTerminal('To be filled');
                 break;
             case 'projects':
-                printToTerminal('To be filled');  //integrare js su downloads.kekkotech.com
+                printToTerminal('To be filled');
                 break;
-            case 'contacts':  //integrare js
+            case 'contacts':
                 printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>');
                 break;
             case 'cls':
