@@ -64,19 +64,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch('https://api.ipify.org?format=json')
                     .then(response => response.json())
                     .then(data => {
-                        ipuserIdentifier = `${data.ip}@kekkotech.com`;
-                        userIdentifier = 'KekkOS | kekkotech.com'
+                        // **INIZIO BLOCCO CORRETTO**
+                        const promptIdentifier = `${data.ip}@kekkotech.com`;
+                        
                         document.getElementById('ip-address').textContent = data.ip;
-                        if (promptSpan) promptSpan.textContent = `${userIdentifier}:~$`;
-                        document.title = userIdentifier;
+                        
+                        // 1. Imposta il prompt dinamico
+                        if (promptSpan) promptSpan.textContent = `${promptIdentifier}:~$`;
+                        
+                        // 2. Imposta il titolo della finestra del terminale (fisso)
                         if (terminalTitle) terminalTitle.textContent = 'KekkOS';
+
+                        // 3. Imposta il titolo della scheda del browser (fisso)
+                        document.title = 'kekkotech';
+                        // **FINE BLOCCO CORRETTO**
                     }).catch(() => {
-                        ipuserIdentifier = 'guest@kekkotech.com';
-                        userIdentifier = "KekkOS | kekkotech.com"
+                        // **INIZIO BLOCCO CORRETTO (ERRORE)**
+                        const promptIdentifier = 'guest@kekkotech.com';
+
                         document.getElementById('ip-address').textContent = 'non disponibile';
-                        if (promptSpan) promptSpan.textContent = `${userIdentifier}:~$`;
-                        document.title = userIdentifier;
+
+                        if (promptSpan) promptSpan.textContent = `${promptIdentifier}:~$`;
                         if (terminalTitle) terminalTitle.textContent = 'KekkOS';
+                        document.title = 'kekkotech';
+                        // **FINE BLOCCO CORRETTO (ERRORE)**
                     });
             }
             if (loaderLines[lineIndex].includes('date-time')) {
