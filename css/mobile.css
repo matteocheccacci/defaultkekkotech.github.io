@@ -2,8 +2,8 @@
 
 #terminal {
     /* Adatta il terminale per riempire meglio lo schermo */
-    width: 95%;
-    height: 95vh;
+    width: 80%;
+    height: 80vh;
     margin: 2.5vh auto;
 }
 
@@ -14,7 +14,7 @@
 }
 
 #output {
-    /* Fa in modo che l'output occupi tutto lo spazio disponibile */
+    /* Percentuale di spazio occupato sulla schermata */
     flex-grow: 1;
 }
 
