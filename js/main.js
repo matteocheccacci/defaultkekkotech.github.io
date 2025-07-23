@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Contenuto da mostrare nel loader, linea per linea
+    //Loading screen
     const loaderLines = [
         `<pre>
         /////////////////////////////////////////////////
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let lineIndex = 0;
 
-    // --- Funzione di caricamento ---
+    //function loading screen
     function typeLoader() {
         if (lineIndex < loaderLines.length) {
             loaderContent.innerHTML += loaderLines[lineIndex];
@@ -144,9 +144,11 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'projects':
                 printToTerminal('To be filled');
                 break;
-            case 'contacts':
+            case 'contacts': { 
                 printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>');
+                printToTerminal('Instagram: <a href="https://instagram.com/matteo.checcacci">@matteo.checcacci</a>');
                 break;
+            }
             case 'cls':
                 outputDiv.innerHTML = '';
                 break;

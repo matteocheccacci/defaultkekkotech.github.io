@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showTerminal() {
-        document.getElementById('loader').style.display = 'none';
+        document.getElementById('loader-mobile').style.display = 'none';
         terminal.style.display = 'flex';
         printToTerminal('Benvenuto su kekkotech.com!')
     }
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
     commandButtons.forEach(button => {
         button.addEventListener('click', function() {
             const command = this.dataset.command;
-            const promptText = `${userIdentifier}:~$`; // Usa l'identificativo salvato
+            const promptText = `${ipuserIdentifier}:~$`; // Usa l'identificativo salvato
             printToTerminal(`${promptText} ${command}`);
             handleCommand(command);
         });
@@ -101,7 +101,11 @@ document.addEventListener('DOMContentLoaded', function() {
         switch (command) {
             case 'aboutme': printToTerminal('To be filled'); break;
             case 'projects': printToTerminal('To be filled'); break;
-            case 'contacts': printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>'); break;
+            case 'contacts': {   
+                printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>'); 
+                printToTerminal('Instagram: <a href="https://instagram.com/matteo.checcacci">@matteo.checcacci</a>');
+                break;
+            } 
             case 'cls': outputDiv.innerHTML = ''; break;
             default: printToTerminal(`Comando non trovato: ${command}`);
         }
