@@ -17,7 +17,7 @@
 
 .loader-content {
     /* Allinea il testo a destra all'interno del box centrato */
-    text-align: left;
+    text-align: right;
 }
 
 .loader-content pre {

@@ -48,20 +48,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (loaderLines[lineIndex].includes('ip-address')) {
                 fetch('https://api.ipify.org?format=json')
                     .then(response => response.json())
-                    //sono state fatte delle modifiche per mostrare un title uguale sempre. rinominare per mostrare ip@kekkotech.com
                     .then(data => {
-                        ipuserIdentifier = `${data.ip}@kekkotech.com`; // Salva l'identificativo
-                        userIdentifier = `KekkOS Mobile | kekkotech.com`
+                        userIdentifier = `${data.ip}@kekkotech.com`; // Salva l'identificativo
                         document.getElementById('ip-address').textContent = data.ip;
-                        document.title = userIdentifier; // Titolo della scheda del browser
-                        if (terminalTitle) terminalTitle.textContent = 'KekkOS Mobile'; // Titolo della finestra del terminale
+                        document.title = 'KekkOS Mobile | kekkotech.com';
+                        if (terminalTitle) terminalTitle.textContent = 'KekkOS Mobile';
                     })
                     .catch(() => {
-                        // In caso di errore, userIdentifier rimane 'guest@kekkotech.com'
-                        ipuserIdentifier = 'guest@kekkotech.com';
-                        userIdentifier = `KekkOS Mobile | kekkotech.com`
+                        userIdentifier = 'guest@kekkotech.com';
                         document.getElementById('ip-address').textContent = 'non disponibile';
-                        document.title = userIdentifier;
+                        document.title = 'KekkOS Mobile | kekkotech.com';
                         if (terminalTitle) terminalTitle.textContent = 'KekkOS Mobile';
                     });
             }
@@ -91,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
     commandButtons.forEach(button => {
         button.addEventListener('click', function() {
             const command = this.dataset.command;
-            const promptText = `${ipuserIdentifier}:~$`; // Usa l'identificativo salvato
+            const promptText = `${userIdentifier}:~$`; // Usa l'identificativo salvato
             printToTerminal(`${promptText} ${command}`);
             handleCommand(command);
         });
@@ -99,15 +95,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleCommand(command) {
         switch (command) {
-            case 'aboutme': printToTerminal('To be filled'); break;
-            case 'projects': printToTerminal('To be filled'); break;
-            case 'contacts': {   
-                printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>'); 
+            case 'aboutme':
+                printToTerminal('To be filled');
+                break;
+
+            case 'projects':
+                printToTerminal('Caricamento progetti...');
+                fetch('https://downloads.kekkotech.com/js/list.js')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Errore HTTP: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        const projectList = eval(text + '; projectList');
+
+                        if (projectList && projectList.length > 0) {
+                            printToTerminal('Progetti trovati:');
+                            projectList.forEach(project => {
+                                printToTerminal('---');
+                                printToTerminal(`<b>${project.name}</b> (v${project.version})`);
+                                printToTerminal(`${project.description}`);
+                                if (project.info && project.info !== '404') {
+                                    printToTerminal(`<a href="${project.info}" target="_blank">Maggiori info...</a>`);
+                                }
+                            });
+                            printToTerminal('---');
+                        } else {
+                            printToTerminal('Nessun progetto trovato.');
+                        }
+                    })
+                    .catch(error => {
+                        printToTerminal(`Errore nel caricamento dei progetti.`);
+                        console.error(error);
+                    });
+                break;
+
+            case 'contacts': {
+                printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>');
                 printToTerminal('Instagram: <a href="https://instagram.com/matteo.checcacci">@matteo.checcacci</a>');
                 break;
-            } 
-            case 'cls': outputDiv.innerHTML = ''; break;
-            default: printToTerminal(`Comando non trovato: ${command}`);
+            }
+            case 'cls':
+                outputDiv.innerHTML = '';
+                break;
+            default:
+                printToTerminal(`Comando non trovato: ${command}`);
         }
     }
 

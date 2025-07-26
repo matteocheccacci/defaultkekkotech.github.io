@@ -64,30 +64,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch('https://api.ipify.org?format=json')
                     .then(response => response.json())
                     .then(data => {
-                        // **INIZIO BLOCCO CORRETTO**
                         const promptIdentifier = `${data.ip}@kekkotech.com`;
-                        
                         document.getElementById('ip-address').textContent = data.ip;
-                        
-                        // 1. Imposta il prompt dinamico
                         if (promptSpan) promptSpan.textContent = `${promptIdentifier}:~$`;
-                        
-                        // 2. Imposta il titolo della finestra del terminale (fisso)
                         if (terminalTitle) terminalTitle.textContent = 'KekkOS';
-
-                        // 3. Imposta il titolo della scheda del browser (fisso)
                         document.title = 'kekkotech';
-                        // **FINE BLOCCO CORRETTO**
                     }).catch(() => {
-                        // **INIZIO BLOCCO CORRETTO (ERRORE)**
                         const promptIdentifier = 'guest@kekkotech.com';
-
                         document.getElementById('ip-address').textContent = 'non disponibile';
-
                         if (promptSpan) promptSpan.textContent = `${promptIdentifier}:~$`;
                         if (terminalTitle) terminalTitle.textContent = 'KekkOS';
                         document.title = 'kekkotech';
-                        // **FINE BLOCCO CORRETTO (ERRORE)**
                     });
             }
             if (loaderLines[lineIndex].includes('date-time')) {
@@ -141,10 +128,45 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'aboutme':
                 printToTerminal('To be filled');
                 break;
+
             case 'projects':
-                printToTerminal('To be filled');
+                printToTerminal('Caricamento progetti da services.kekkotech.com...');
+                fetch('https://services.kekkotech.com/downloads.kekkotech.com/project-list.js')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Errore HTTP: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        // Eseguiamo il codice JS per avere accesso alla variabile projectList
+                        const projectList = eval(text + '; projectList');
+
+                        if (projectList && projectList.length > 0) {
+                            printToTerminal('Progetti trovati:');
+                            projectList.forEach(project => {
+                                printToTerminal('----------------------------------------');
+                                printToTerminal(`Nome: <span class="cmd">${project.name}</span> (v${project.version})`);
+                                printToTerminal(`Descrizione: ${project.description}`);
+                                printToTerminal(`Autori: ${project.authors}`);
+                                // Aggiungi un link cliccabile se l'Link non è "404"
+                                if (project.info && project.info !== '404') {
+                                    printToTerminal(`Link: <a href="${project.info}" target="_blank">Clicca qui</a>`);
+                                }
+                            });
+                            printToTerminal('----------------------------------------');
+                        } else {
+                            printToTerminal('Nessun progetto trovato.');
+                        }
+                    })
+                    .catch(error => {
+                        printToTerminal(`Errore nel caricamento della lista progetti: ${error.message}`);
+                        printToTerminal('Controlla la console per maggiori dettagli.');
+                        console.error(error);
+                    });
                 break;
-            case 'contacts': { 
+
+            case 'contacts': {
                 printToTerminal('Email: <a href="mailto:matteocheccacci@gmail.com">matteocheccacci@gmail.com</a>');
                 printToTerminal('Instagram: <a href="https://instagram.com/matteo.checcacci">@matteo.checcacci</a>');
                 break;
