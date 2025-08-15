@@ -167,30 +167,43 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 break;
             
-            case 'status':
+case 'status':
+                const sites = ["kekkotech.com", "downloads.kekkotech.com", "services.kekkotech.com"];
                 printToTerminal("Verifica dello stato dei servizi in corso...");
-                //verifichiamo lo stato di kekkotech.com
-                fetch("https://kekkotech.com/js/status.js")
-                    .then (rensponse => {
-                        if(!response.ok) {
-                            throw new Error(`Errore HTTP: ${response.status}.`);
-                        }
-                        return response.text();
-                    })
-                    .then (text => {
-                        const status = eval(text + '; status');
-                        if(status != "online") {
-                            printToTerminal("kekkotech.com Offline");
-                        }
-                        else {
-                            printToTerminal("kekkotech.com Online");
-                        }
+
+                const fetchPromises = sites.map(site => {
+                    return fetch(`https://${site}/js/status.json`)
+                        .then(response => {
+                            if (!response.ok) {
+                                // Se la risposta non è OK (es. 404), restituisci uno stato "offline"
+                                return { status: 'offline' }; 
+                            }
+                            return response.json();
+                        })
+                        .then(data => ({
+                            site: site,
+                            status: data.status
+                        }))
+                        .catch(error => {
+                            // In caso di errore di rete, restituisci uno stato "offline"
+                            return {
+                                site: site,
+                                status: 'offline'
+                            };
+                        });
+                });
+
+                Promise.all(fetchPromises)
+                    .then(results => {
+                        results.forEach(result => {
+                            printToTerminal(`Stato di ${result.site}: ${result.status}`);
+                        });
+                        printToTerminal("Verifica completata.");
                     })
                     .catch(error => {
-                        printToTerminal(`Errore nella verifica dello stato del servizio: ${error.message}.`);
-                        printToTerminal('Controlla la console per maggiori dettagli.');
+                        printToTerminal(`Errore durante l'elaborazione di una delle richieste.`);
                         console.error(error);
-                    })
+                    });
                 break;
 
             case 'contacts': {

@@ -137,6 +137,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 printToTerminal('Instagram: <a href="https://instagram.com/matteo.checcacci">@matteo.checcacci</a>');
                 break;
             }
+            case 'status':
+                const sites = ["kekkotech.com", "downloads.kekkotech.com", "services.kekkotech.com"];
+                printToTerminal("Verifica dello stato dei servizi in corso...");
+
+                const fetchPromises = sites.map(site => {
+                    return fetch(`https://${site}/js/status.json`)
+                        .then(response => {
+                            if (!response.ok) {
+                                return { status: 'offline' };
+                            }
+                            return response.json();
+                        })
+                        .then(data => ({
+                            site: site,
+                            status: data.status
+                        }))
+                        .catch(error => {
+                            return {
+                                site: site,
+                                status: 'offline'
+                            };
+                        });
+                });
+
+                Promise.all(fetchPromises)
+                    .then(results => {
+                        results.forEach(result => {
+                            printToTerminal(`Stato di ${result.site}: ${result.status}`);
+                        });
+                        printToTerminal("Verifica completata.");
+                    })
+                    .catch(error => {
+                        printToTerminal(`Errore durante l'elaborazione di una delle richieste.`);
+                        console.error(error);
+                    });
+                break;
             case 'cls':
                 outputDiv.innerHTML = '';
                 break;
