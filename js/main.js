@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 printToTerminal('- <span class="cmd">aboutme</span>: Informazioni su di me.');
                 printToTerminal('- <span class="cmd">projects</span>: I miei progetti principali.');
                 printToTerminal('- <span class="cmd">contacts</span>: Come contattarmi.');
+                printToTerminal('- <span class="cmd">status</span>: Verifica lo stato dei servizi online');
                 printToTerminal('- <span class="cmd">cls</span>: Pulisce la schermata.');
                 break;
             case 'aboutme':
@@ -160,10 +161,36 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     })
                     .catch(error => {
-                        printToTerminal(`Errore nel caricamento della lista progetti: ${error.message}`);
+                        printToTerminal(`Errore nel caricamento della lista progetti: ${error.message}.`);
                         printToTerminal('Controlla la console per maggiori dettagli.');
                         console.error(error);
                     });
+                break;
+            
+            case 'status':
+                printToTerminal("Verifica dello stato dei servizi in corso...");
+                //verifichiamo lo stato di kekkotech.com
+                fetch("https://kekkotech.com/js/status.js")
+                    .then (rensponse => {
+                        if(!response.ok) {
+                            throw new Error(`Errore HTTP: ${response.status}.`);
+                        }
+                        return response.text();
+                    })
+                    .then (text => {
+                        const status = eval(text + '; status');
+                        if(status != "online") {
+                            printToTerminal("kekkotech.com Offline");
+                        }
+                        else {
+                            printToTerminal("kekkotech.com Online");
+                        }
+                    })
+                    .catch(error => {
+                        printToTerminal(`Errore nella verifica dello stato del servizio: ${error.message}.`);
+                        printToTerminal('Controlla la console per maggiori dettagli.');
+                        console.error(error);
+                    })
                 break;
 
             case 'contacts': {
