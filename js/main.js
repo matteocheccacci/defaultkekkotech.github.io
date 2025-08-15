@@ -168,8 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
             
 case 'status':
-                const sites = ["kekkotech.com", "downloads.kekkotech.com", "services.kekkotech.com", "softwares.kekkotech.com", "engineering.
-kekkotech.com", "security.kekkotech.com"];
+                const sites = ["kekkotech.com", "downloads.kekkotech.com", "services.kekkotech.com", "softwares.kekkotech.com", "engineering.kekkotech.com", "security.kekkotech.com"];
                 printToTerminal("Verifica dello stato dei servizi in corso...");
 
                 const fetchPromises = sites.map(site => {
