@@ -102,6 +102,14 @@ document.addEventListener('DOMContentLoaded', function() {
         printToTerminal('Benvenuto su kekkotech.com!');
         printToTerminal('Digita "help" per la lista dei comandi.');
     }
+					// --- Comando tramite URL ---
+    			const urlParams = new URLSearchParams(window.location.search);
+    			const commandFromUrl = urlParams.get('cmd');
+    			if (commandFromUrl) {
+        printToTerminal(`${promptSpan.textContent} ${commandFromUrl}`);
+        handleCommand(commandFromUrl);
+    }
+
 
     // --- Logica del Terminale ---
     inputField.addEventListener('keydown', function(event) {
