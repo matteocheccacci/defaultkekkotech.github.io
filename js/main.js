@@ -101,15 +101,15 @@ document.addEventListener('DOMContentLoaded', function() {
         inputField.focus();
         printToTerminal('Benvenuto su kekkotech.com!');
         printToTerminal('Digita "help" per la lista dei comandi.');
-    }
-					// --- Comando tramite URL ---
-    			const urlParams = new URLSearchParams(window.location.search);
-    			const commandFromUrl = urlParams.get('cmd');
-    			if (commandFromUrl) {
-        printToTerminal(`${promptSpan.textContent} ${commandFromUrl}`);
-        handleCommand(commandFromUrl);
-    }
 
+        // --- Comando tramite URL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const commandFromUrl = urlParams.get('cmd');
+        if (commandFromUrl) {
+            printToTerminal(`${promptSpan.textContent} ${commandFromUrl}`);
+            handleCommand(commandFromUrl);
+        }
+    }
 
     // --- Logica del Terminale ---
     inputField.addEventListener('keydown', function(event) {
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.error(error);
                     });
                 break;
-            
+
             case 'status':
                 const sites = ["kekkotech.com", "downloads.kekkotech.com", "resources.services.kekkotech.com"];
                 printToTerminal("Verifica dello stato dei servizi in corso...");
