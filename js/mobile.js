@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             case 'projects':
                 printToTerminal('Caricamento progetti...');
-                fetch('https://resources.services.kekkotech.com/404') //sistemare
+                fetch('https://downloads.kekkotech.com/js/list.js')
                     .then(response => {
                         if (!response.ok) {
                             throw new Error(`Errore HTTP: ${response.status}`);
@@ -138,8 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
             }
             case 'status':
-                                const sites = ["kekkotech.com", "downloads.kekkotech.com", "services.kekkotech.com", "softwares.kekkotech.com", "engineering.kekkotech.com", "security.kekkotech.com", "resources.services.kekkotech
-.com"];
+                const sites = ["kekkotech.com", "downloads.kekkotech.com", "services.kekkotech.com"];
                 printToTerminal("Verifica dello stato dei servizi in corso...");
 
                 const fetchPromises = sites.map(site => {
