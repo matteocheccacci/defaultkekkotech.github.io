@@ -167,36 +167,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 break;
             
-case 'status':
-                const sites = ["kekkotech.com", "downloads.kekkotech.com", "services.kekkotech.com", "softwares.kekkotech.com", "engineering.kekkotech.com", "security.kekkotech.com", "resources.services.kekkotech.com"];
+            case 'status':
+                const sites = ["kekkotech.com", "downloads.kekkotech.com", "resources.services.kekkotech.com"];
                 printToTerminal("Verifica dello stato dei servizi in corso...");
 
                 const fetchPromises = sites.map(site => {
-                    return fetch(`https://${site}/js/status.json`)
+                    const statusPromise = fetch(`https://${site}/js/status.json`)
                         .then(response => {
                             if (!response.ok) {
-                                // Se la risposta non è OK (es. 404), restituisci uno stato "offline"
-                                return { status: 'offline' }; 
+                                return { status: 'offline' };
                             }
                             return response.json();
                         })
                         .then(data => ({
-                            site: site,
                             status: data.status
                         }))
-                        .catch(error => {
-                            // In caso di errore di rete, restituisci uno stato "offline"
-                            return {
-                                site: site,
-                                status: 'offline'
-                            };
-                        });
+                        .catch(error => ({
+                            status: 'offline'
+                        }));
+
+                    const motdPromise = fetch(`https://resources.services.kekkotech.com/${site}/motd.json`)
+                        .then(response => {
+                            if (!response.ok) {
+                                return { motd: '404 no MOTD data.' };
+                            }
+                            return response.json();
+                        })
+                        .catch(error => ({
+                            motd: 'Errore nel recupero del MOTD.'
+                        }));
+
+                    return Promise.all([statusPromise, motdPromise])
+                        .then(([statusResult, motdResult]) => ({
+                            site: site,
+                            status: statusResult.status,
+                            motd: motdResult.motd
+                        }));
                 });
 
                 Promise.all(fetchPromises)
                     .then(results => {
                         results.forEach(result => {
-                            printToTerminal(`Stato di ${result.site}: ${result.status}`);
+                            const output = `- Stato di ${result.site}: ${result.status}. MOTD: ${result.motd}`;
+                            printToTerminal(output);
                         });
                         printToTerminal("Verifica completata.");
                     })
