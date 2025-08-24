@@ -52,7 +52,7 @@
                 <span class="terminal-button minimize"></span>
                 <span class="terminal-button maximize"></span>
             </div>
-            <div class="terminal-title">KekkOS - Errore 404</div>
+            <div class="terminal-title">KekkOS - Error 404</div>
         </div>
         <div id="terminal-body">
             <div id="output"></div>
@@ -70,9 +70,9 @@
                 ' ',
                 'bash: command not found: GET ' + window.location.pathname,
                 '<br>',
-                'ERRORE 404: Pagina non trovata.',
-                'La risorsa che stai cercando potrebbe essere stata spostata o non è mai esistita.',
-                '<a href="/" class="home-button">Torna alla Home</a>'
+                'ERROR 404: Page not found.',
+                `The resource you're looking for may have been moved or no longer exists.`,
+                '<a href="/" class="home-button">Home</a>'
             ];
 
             let lineIndex = 0;
@@ -98,7 +98,6 @@
                     exitMessage.style.color = '#0F0';
                     exitMessage.style.textAlign = 'center';
                     exitMessage.style.marginTop = '40px';
-                    exitMessage.textContent = '[Puoi chiudere questa finestra]';
                     exitMessage.textContent = '[You can now close this window]';
                     document.body.appendChild(exitMessage);
                 });
