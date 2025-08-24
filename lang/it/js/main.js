@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `<pre>
         /////////////////////////////////////////////////
         //                                             //
-        //   K  E  K  K  O  T  E  C  H  .  C  O  M     //
+        //      K  E  K  K  O  T  E  C  H  .  I  T     //
         //                                             //
         /////////////////////////////////////////////////
 </pre>`,
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
 
             case 'status':
-                const sites = ["kekkotech.com", "kekkotech.it","downloads.kekkotech.com", "resources.services.kekkotech.com"];
+                const sites = ["kekkotech.com", "downloads.kekkotech.com", "resources.services.kekkotech.com"];
                 printToTerminal("Verifica dello stato dei servizi in corso...");
 
                 const fetchPromises = sites.map(site => {
