@@ -43,13 +43,13 @@ document.addEventListener('DOMContentLoaded', function() {
         //                                             //
         /////////////////////////////////////////////////
 </pre>`,
-        '<p>Avvio di KekkOS in corso...</p>',
-        '<p>Inizializzazione sessione...</p>',
-        '<p>Connessione da: <span id="ip-address">ricerca...</span></p>',
-        '<p>Data e ora: <span id="date-time">ricerca...</span></p>',
-        '<p>Ultimo accesso: <span id="last-visit">mai</span></p>',
+        '<p>KekkOS is starting...</p>',
+        '<p>Session initialization...</p>',
+        '<p>Connection from: <span id="ip-address">loading...</span></p>',
+        '<p>Date and time: <span id="date-time">loading...</span></p>',
+        '<p>Last visit: <span id="last-visit">never</span></p>',
         '<br>',
-        '<p>Caricamento completato.</p>'
+        '<p>Loading completed.</p>'
     ];
 
     let lineIndex = 0;
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (loaderLines[lineIndex].includes('last-visit')) {
                 const lastVisit = localStorage.getItem('kekkotech_last_visit');
                 document.getElementById('last-visit').textContent = lastVisit || 'mai';
-                localStorage.setItem('kekkotech_last_visit', new Date().toLocaleString('it-IT'));
+                localStorage.setItem('kekkotech_last_visit', new Date().toLocaleString('EN'));
             }
 
             lineIndex++;
@@ -99,8 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loader.style.display = 'none';
         terminal.style.display = 'flex';
         inputField.focus();
-        printToTerminal('Benvenuto su kekkotech.com!');
-        printToTerminal('Digita "help" per la lista dei comandi.');
+        printToTerminal('Welcome on kekkotech.com!');
+        printToTerminal('Type "help" to show the command list.');
 
         // --- Comando tramite URL ---
         const urlParams = new URLSearchParams(window.location.search);
@@ -126,24 +126,24 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleCommand(command) {
         switch (command) {
             case 'help':
-                printToTerminal('Comandi disponibili:');
-                printToTerminal('- <span class="cmd">help</span>: Mostra questa lista di comandi.');
-                printToTerminal('- <span class="cmd">aboutme</span>: Informazioni su di me.');
-                printToTerminal('- <span class="cmd">projects</span>: I miei progetti principali.');
-                printToTerminal('- <span class="cmd">contacts</span>: Come contattarmi.');
-                printToTerminal('- <span class="cmd">status</span>: Verifica lo stato dei servizi online');
-                printToTerminal('- <span class="cmd">cls</span>: Pulisce la schermata.');
+                printToTerminal('Commands:');
+                printToTerminal('- <span class="cmd">help</span>: Shows this list.');
+                printToTerminal('- <span class="cmd">aboutme</span>: Informations about me.');
+                printToTerminal('- <span class="cmd">projects</span>: My principal projects.');
+                printToTerminal('- <span class="cmd">contacts</span>: Contact me.');
+                printToTerminal('- <span class="cmd">status</span>: Service status.');
+                printToTerminal('- <span class="cmd">cls</span>: Clean the screen.');
                 break;
             case 'aboutme':
                 printToTerminal('To be filled');
                 break;
 
             case 'projects':
-                printToTerminal('Caricamento progetti da resources.services.kekkotech.com...');
+                printToTerminal('Loading projects from: resources.services.kekkotech.com...');
                 fetch('https://resources.services.kekkotech.com/downloads.kekkotech.com/project-list.js')
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error(`Errore HTTP: ${response.status}`);
+                            throw new Error(`HTTP error: ${response.status}`);
                         }
                         return response.text();
                     })
@@ -152,32 +152,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         const projectList = eval(text + '; projectList');
 
                         if (projectList && projectList.length > 0) {
-                            printToTerminal('Progetti trovati:');
+                            printToTerminal('Projects:');
                             projectList.forEach(project => {
                                 printToTerminal('----------------------------------------');
-                                printToTerminal(`Nome: <span class="cmd">${project.name}</span> (v${project.version})`);
-                                printToTerminal(`Descrizione: ${project.description}`);
-                                printToTerminal(`Autori: ${project.authors}`);
+                                printToTerminal(`Name: <span class="cmd">${project.name}</span> (v${project.version})`);
+                                printToTerminal(`Description: ${project.description}`);
+                                printToTerminal(`Authors: ${project.authors}`);
                                 // Aggiungi un link cliccabile se l'Link non è "404"
                                 if (project.info && project.info !== '404') {
-                                    printToTerminal(`Link: <a href="${project.info}" target="_blank">Clicca qui</a>`);
+                                    printToTerminal(`Link: <a href="${project.info}" target="_blank">Click here</a>`);
                                 }
                             });
                             printToTerminal('----------------------------------------');
                         } else {
-                            printToTerminal('Nessun progetto trovato.');
+                            printToTerminal('No projects found.');
                         }
                     })
                     .catch(error => {
-                        printToTerminal(`Errore nel caricamento della lista progetti: ${error.message}.`);
-                        printToTerminal('Controlla la console per maggiori dettagli.');
+                        printToTerminal(`Error while loading the projects list: ${error.message}.`);
+                        printToTerminal('Check the console for further details.');
                         console.error(error);
                     });
                 break;
 
             case 'status':
                 const sites = ["kekkotech.com", "kekkotech.it","downloads.kekkotech.com", "resources.services.kekkotech.com"];
-                printToTerminal("Verifica dello stato dei servizi in corso...");
+                printToTerminal("Verifying the services status...");
 
                 const fetchPromises = sites.map(site => {
                     const statusPromise = fetch(`https://${site}/js/status.json`)
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             return response.json();
                         })
                         .catch(error => ({
-                            motd: 'Errore nel recupero del MOTD.'
+                            motd: 'Error while loading MOTD.'
                         }));
 
                     return Promise.all([statusPromise, motdPromise])
@@ -216,13 +216,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 Promise.all(fetchPromises)
                     .then(results => {
                         results.forEach(result => {
-                            const output = `- Stato di ${result.site}: ${result.status}. MOTD: ${result.motd}`;
+                            const output = `- Status of ${result.site}: ${result.status}. MOTD: ${result.motd}`;
                             printToTerminal(output);
                         });
-                        printToTerminal("Verifica completata.");
+                        printToTerminal("Check completed.");
                     })
                     .catch(error => {
-                        printToTerminal(`Errore durante l'elaborazione di una delle richieste.`);
+                        printToTerminal(`Error.`);
                         console.error(error);
                     });
                 break;
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 outputDiv.innerHTML = '';
                 break;
             default:
-                printToTerminal(`Comando non trovato: ${command}`);
+                printToTerminal(`Command not found: ${command}`);
         }
     }
 

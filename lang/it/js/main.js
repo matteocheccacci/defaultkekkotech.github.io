@@ -64,13 +64,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch('https://api.ipify.org?format=json')
                     .then(response => response.json())
                     .then(data => {
-                        const promptIdentifier = `${data.ip}@kekkotech.com`;
+                        const promptIdentifier = `${data.ip}@kekkotech.it`;
                         document.getElementById('ip-address').textContent = data.ip;
                         if (promptSpan) promptSpan.textContent = `${promptIdentifier}:~$`;
                         if (terminalTitle) terminalTitle.textContent = 'KekkOS';
                         document.title = 'kekkotech';
                     }).catch(() => {
-                        const promptIdentifier = 'guest@kekkotech.com';
+                        const promptIdentifier = 'guest@kekkotech.it';
                         document.getElementById('ip-address').textContent = 'non disponibile';
                         if (promptSpan) promptSpan.textContent = `${promptIdentifier}:~$`;
                         if (terminalTitle) terminalTitle.textContent = 'KekkOS';
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loader.style.display = 'none';
         terminal.style.display = 'flex';
         inputField.focus();
-        printToTerminal('Benvenuto su kekkotech.com!');
+        printToTerminal('Benvenuto su kekkotech.it!');
         printToTerminal('Digita "help" per la lista dei comandi.');
 
         // --- Comando tramite URL ---
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
 
             case 'status':
-                const sites = ["kekkotech.com", "downloads.kekkotech.com", "resources.services.kekkotech.com"];
+                const sites = ["kekkotech.com", "kekkotech.it", "downloads.kekkotech.com", "resources.services.kekkotech.com"];
                 printToTerminal("Verifica dello stato dei servizi in corso...");
 
                 const fetchPromises = sites.map(site => {
