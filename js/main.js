@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             exitMessage.style.color = '#0F0';
             exitMessage.style.textAlign = 'center';
             exitMessage.style.marginTop = '40px';
-            exitMessage.textContent = '[Sessione terminata]';
+            exitMessage.textContent = '[Session stopped]';
             document.body.appendChild(exitMessage);
         });
     }
@@ -132,11 +132,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 printToTerminal('- <span class="cmd">projects</span>: My principal projects.');
                 printToTerminal('- <span class="cmd">contacts</span>: Contact me.');
                 printToTerminal('- <span class="cmd">status</span>: Service status.');
+                printToTerminal('- <span class="cmd">language</span>')
                 printToTerminal('- <span class="cmd">cls</span>: Clean the screen.');
                 break;
             case 'aboutme':
                 printToTerminal('To be filled');
                 break;
+            
+            case 'language':
+                printToTerminal('Loading languages from: resources.services.kekkotech.com...');
+                fetch('https://resources.services.kekkotech.com/languages/list.js')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        // Eseguiamo il codice JS per avere accesso alla variabile languageList
+                        const languageList = eval(text + '; languageList');
+
+                        if (languageList && languageList.length > 0) {
+                            printToTerminal('Languages:');
+                            languageList.forEach(language => {
+                                printToTerminal('----------------------------------------');
+                                printToTerminal(`Language: <span class="cmd">${language.lang}</span>`);
+                                // Aggiungi un link cliccabile se l'Link non è "404"
+                                if (project.info && project.info !== '404') {
+                                    printToTerminal(`Link: <a href="${language.link}" target="_blank">Click here</a>`);
+                                }
+                            });
+                            printToTerminal('----------------------------------------');
+                        } else {
+                            printToTerminal('No language found.');
+                        }
+                    })
+                    .catch(error => {
+                        printToTerminal(`Error while loading the languages list: ${error.message}.`);
+                        printToTerminal('Check the console for further details.');
+                        console.error(error);
+                    });
+                break;
+                
 
             case 'projects':
                 printToTerminal('Loading projects from: resources.services.kekkotech.com...');
